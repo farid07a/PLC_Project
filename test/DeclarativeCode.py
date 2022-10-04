@@ -24,8 +24,47 @@ DB_NUMBER = int(input("Enter Your DB Number :"))
 STAR_ADDRESS = int(input("Enter FIRST Address"))
 SIZE_Byte = int(input("Enter size Byte you want to read and Save it In array Of bytes"))
 
-PlcClient.ab_read(DB_NUMBER,STAR_ADDRESS,SIZE_Byte)
+ArrayOfByte = PlcClient.ab_read(DB_NUMBER,STAR_ADDRESS,SIZE_Byte)
 # Return Array Of BYte
+
+RangeOfString_ByteToString = ArrayOfByte[2:256].decode("UTF-8").strip("\x00")
+print(RangeOfString_ByteToString)
+
+RangeOfFirstInt_ByteToInt = int.from_bytes(ArrayOfByte[256:258], byteorder="big")
+print(RangeOfFirstInt_ByteToInt)
+
+booleanValue = bool(ArrayOfByte[258])
+
+#############################################################
+
+PlcClient.db_write(DB_NUMBER, STAR_ADDRESS, b'Data as String to Bytes')
+
+ArrayOfByte = PlcClient.ab_read(DB_NUMBER,STAR_ADDRESS,SIZE_Byte)
+# Return Array Of BYte
+
+RangeOfString_ByteToString = ArrayOfByte[2:256].decode("UTF-8").strip("\x00")
+print(RangeOfString_ByteToString)
+
+RangeOfFirstInt_ByteToInt = int.from_bytes(ArrayOfByte[256:258], byteorder="big")
+print(RangeOfFirstInt_ByteToInt)
+
+booleanValue = bool(ArrayOfByte[258])
+
+
+
+
+
+"""
+258 Byte
+258.0 bit
+258.1 bit
+
+"""
+
+
+
+
+
 
 
 

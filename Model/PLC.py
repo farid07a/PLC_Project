@@ -1,5 +1,6 @@
+from snap7 import client
+class plcMachine (client):
 
-class plcMachine:
     IdPlc = 0
     IP = ""
     RACK = 0
@@ -21,7 +22,6 @@ class plcMachine:
     def getIdPlc(self):
         return self.IdPlc
 
-
     def setIP(self,IP):
         self.IP = IP
 
@@ -40,10 +40,7 @@ class plcMachine:
     def getRACK(self):
         return self.RACK
 
-
-
-
-
-
     def AddNewPLC(self):
         Query = "INSERT INTO PLC () values ("
+
+

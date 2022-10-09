@@ -1,48 +1,68 @@
+from time import sleep
+
 import mysql.connector
 from mysql.connector import Error
 
 
 class ConnectionDB:
-    @staticmethod
-    def ConnectingMysqlDataBase():
-        try:
-            db = mysql.connector.connect(
-                host='localhost',
-                user='root',
-                passwd='',
-                database='test'
-            )
-        except:
-            print("No connection")
 
+    countCall = 1
+    db = None
 
-        print(db.is_connected())
-
+    def GetData (self):
+        self.StillToConnecting()
+        print(self.db.is_connected())
         print("After get dta ")
-        cursor = db.cursor()
+        cursor = self.db.cursor()
         cursor.execute('SELECT * FROM tag')
         result = cursor.fetchall()
         for row in result:
             print(row)
 
         cursor.close()
-        db.close()
+        self.db.close()
 
-print(ConnectionDB().ConnectingMysqlDataBase())
 
-    def Connectiong():
-        con= None
+    @staticmethod
+    def Connectiong ():
+        con = None
         try:
-            con=mysql.connector.connect(
+            con = mysql.connector.connect(
                 host='localhost',
                 user='root',
                 passwd='',
                 database='test')
 
             if(con.connect()):
-                print("Succes Connecting")
+                print("Succes Connecting", con.connect())
             else:
-                print("Failed Connecting")
+                print("Failed Connecting", con.connect())
 
         except Error as error:
             print(error)
+            sleep(1)
+            # self.Connectiong()
+
+
+    def StillToConnecting(self):
+        try:
+            if self.db==None:
+                self.db = mysql.connector.connect(host='localhost', user='root', passwd='', database='test')
+            print("Success Connecting")
+            #print(self.countCall)
+            print("\n")
+        except:
+            print("No connection")
+            sleep(1)
+            self.StillToConnecting()
+            self.countCall += 1
+
+
+# print(ConnectionDB().StillToConnecting())
+Obj_Class_Connection = ConnectionDB()
+Obj_Class_Connection.GetData()
+
+# print(ConnectionDB().ConnectingMysqlDataBase())
+
+#ConnectionDB.Connectiong()
+

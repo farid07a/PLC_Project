@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="labConnection">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -139,7 +139,7 @@
       <x>310</x>
       <y>50</y>
       <width>291</width>
-      <height>331</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -238,6 +238,16 @@
     </property>
     <property name="text">
      <string>Deconnect PLC</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>390</y>
+      <width>256</width>
+      <height>151</height>
+     </rect>
     </property>
    </widget>
   </widget>

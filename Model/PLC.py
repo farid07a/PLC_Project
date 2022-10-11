@@ -7,14 +7,44 @@ class plcMachine (client):
     SLOT = 1
     Status = True
     ModelPlc = ""
+    clientPlc = client.Client()
+    ConnectionObj=False
 
-    def __init__(self,IdPlc, IP, RACK, SLOT,Status,ModelPlc ):
+    def __init__(self,IdPlc, IP, RACK, SLOT ):
         self.IdPlc = IdPlc
         self.IP = IP
         self.RACK = RACK
         self.SLOT = SLOT
-        self.Status = Status
-        self.ModelPlc = ModelPlc
+
+
+    def connecting(self):
+
+        try:
+            if not self.clientPlc.get_connected():
+                self.clientPlc.connect(self.IP,self.RACK,self.SLOT)
+                self.ConnectionObj=True
+        except Exception as e:
+            print(e)
+
+
+
+    def connectingRecursion(self):
+
+        try:
+            if self.ConnectionObj==False:
+                self.clientPlc.connect(self.IP,self.RACK,self.SLOT)
+                self.ConnectionObj=True
+        except Exception as e:
+            print("Occured Exception")
+
+
+
+    def getClientPLC(self):
+        return self.clientPlc
+
+    def setClientPLC(self, clientPlc):
+
+
 
     def setIdPlc(self,IdPlc):
         self.IdPlc = IdPlc

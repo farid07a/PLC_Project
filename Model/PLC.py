@@ -1,3 +1,5 @@
+from time import sleep
+
 import MySQLdb
 from snap7 import client
 import mysql.connector
@@ -5,8 +7,7 @@ from PracticePython import ConnectionDB
 from data_type import DataType
 class plcMachine :
 
-    connection_db = ConnectionDB.ConnectionDB()
-
+    #connection_db = ConnectionDB.ConnectionDB()
     IdPlc = 0
     IP = ""
     RACK = 0
@@ -15,7 +16,7 @@ class plcMachine :
     ModelPlc = ""
     clientPlc = client.Client()
     ConnectionObj=False
-    test_var_connection=mysql.connector.connect()
+    var_connection=mysql.connector.connect()
 
     def __init__(self,IdPlc, IP, RACK, SLOT ):
         self.IdPlc = IdPlc
@@ -31,10 +32,7 @@ class plcMachine :
         except Exception as e:
             print(e)
 
-
-
     def connecting_To_PLC_Recursion(self):
-
         try:
             if self.ConnectionObj==False:
                 self.clientPlc.connect(self.IP,self.RACK,self.SLOT)
@@ -77,18 +75,18 @@ class plcMachine :
     def add_new_plc(self):
         Query = "INSERT INTO plc_controller (Model,IP,RACK,	SLOT) values (%s,%s,%s,%s)"
         try:
-            cnx=mysql.connector.connect()
-            cursor = self.connection_db.get_connection().cursor()
-            val = (self.ModelPlc,self.IP,self.RACK,self.SLOT)
+            self.test_connecttion()
+            cursor = self.var_connection.cursor()
+            val = (self.ModelPlc, self.IP, self.RACK, self.SLOT)
             cursor.execute(Query, val)
             print("Success Insert Record")
-            self.connection_db.get_connection().commit()
+            self.var_connection.commit()
         except mysql.connector.Error as error:
             print("Failed to insert into MySQL table {}".format(error))
         finally:
-            if self.connection_db.get_connection() is not None:
+            if self.var_connection.is_connected() :
                 cursor.close()
-                self.connection_db.disconnect()
+                self.var_connection.close()
                 print("MySQL connection is closed")
 
     def get_list_plc(self):
@@ -119,6 +117,7 @@ class plcMachine :
         for plc in list_plc:
             print("|", plc[0] ,"\t |", plc[1], "\t |", plc[2], "\t \t |",plc[3],"\t |",plc[4] ,"\t|")
 
+
     def add_new_colum_in_plc_table(self, name,value):
         datatype_obj = DataType()
 
@@ -128,23 +127,23 @@ class plcMachine :
             print("Error: Can't connect to database")
             return
         dt_type=''
-        if type(value) ==int:
+        if type(value) == int:
             dt_type = datatype_obj.INT
-        elif type(value)== float:
-            dt_type=datatype_obj.FLOAT
-        elif type(value)== str:
+        elif type(value) == float:
+            dt_type = datatype_obj.FLOAT
+        elif type(value) == str:
             dt_type = datatype_obj.VARCHAR
-        elif type(value)== bool:
+        elif type(value) == bool:
             dt_type = datatype_obj.BOOL
         elif type(value) == bytearray:
-            dt_type=datatype_obj.BINARY
+            dt_type = datatype_obj.BINARY
         else:
             print("Your value is not availble in my data_type class")
             return
 
 
         cursor = connection.cursor()
-        sql = 'ALTER TABLE plc ADD COLUMN '+ name +' VARCHAR(50)'
+        sql = 'ALTER TABLE plc ADD COLUMN '+ name +' '+dt_type
         try:
             cursor.execute(sql)
             connection.commit()
@@ -157,6 +156,21 @@ class plcMachine :
 
     def test_connecttion(self):
         print("")
+        try:
+            if not self.var_connection.is_connected():
+                print("Var test Connection : ", self.var_connection.is_connected())
+                self.var_connection=mysql.connector.connect(host='localhost', user='root', passwd='', database='test')
+                print("Success Connecting dataBase")
+            else:
+                print("Deja connecting")
+
+        except BaseException as e:
+            print(e)
+            sleep(1)
+            self.test_connecttion()
+
+
+
 
     def menu(self):
         flag = True
@@ -181,4 +195,5 @@ class plcMachine :
                 self.display_plc()
 
 obj= plcMachine("S7 1200", "172.16.5.100", 1, 0)
+# obj.test_connecttion()
 obj.menu()

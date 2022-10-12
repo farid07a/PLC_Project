@@ -1,5 +1,6 @@
 
 class DataType:
+
     VARCHAR = "VARCHAR(50)"
     BINARY = "BINARY"
     BIT = "BIT"

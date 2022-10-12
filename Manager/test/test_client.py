@@ -936,7 +936,8 @@ class TestClient(unittest.TestCase):
         self.assertEqual(expected, result[:16])
 
     def test_set_plc_system_datetime(self):
-        # Cli_SetPlcSystemDateTime
+        # Cli_SetPl
+        # cSystemDateTime
         self.assertEqual(0, self.client.set_plc_system_datetime())
 
     def test_tm_read(self):

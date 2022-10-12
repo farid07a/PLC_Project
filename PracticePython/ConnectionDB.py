@@ -41,7 +41,7 @@ class ConnectionDB:
     def disconnect(self):
         self.connection.close()
 
-# print(ConnectionDB().StillToConnecting())
+print(ConnectionDB().connecting())
 # Obj_Class_Connection = ConnectionDB()
 # Obj_Class_Connection.GetData()
 

@@ -156,7 +156,7 @@ class plcMachine :
         connection.close()
 
     def test_connecttion(self):
-
+        print("")
 
     def menu(self):
         flag = True

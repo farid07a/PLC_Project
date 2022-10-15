@@ -44,7 +44,7 @@ class TestServer(unittest.TestCase):
         self.client.disconnect()
         self.client.destroy()
 
-    @unittest.skip("TODO: only first test used")
+    @unittest.skip("TODO: only first myf used")
     def test_read_prefill_db(self):
         data = self.client.db_read(0, 0, 7)
         boolean = snap7.util.get_bool(data, 0, 0)

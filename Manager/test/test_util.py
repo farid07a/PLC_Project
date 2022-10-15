@@ -78,34 +78,34 @@ test_spec_indented = """
 
 
 _bytearray = bytearray([
-    0, 0,  # test int
-    4, 4, ord('t'), ord('e'), ord('s'), ord('t'),  # test string
+    0, 0,  # myf int
+    4, 4, ord('t'), ord('e'), ord('s'), ord('t'),  # myf string
     128 * 0 + 64 * 0 + 32 * 0 + 16 * 0
-    + 8 * 1 + 4 * 1 + 2 * 1 + 1 * 1,                 # test bools
-    68, 78, 211, 51,                               # test real
-    255, 255, 255, 255,                            # test dword
-    0, 0,                                          # test int 2
-    128, 0, 0, 0,                                  # test dint
-    255, 255,                                      # test word
-    0, 16,                                         # test s5time, 0 is the time base,
+    + 8 * 1 + 4 * 1 + 2 * 1 + 1 * 1,                 # myf bools
+    68, 78, 211, 51,                               # myf real
+    255, 255, 255, 255,                            # myf dword
+    0, 0,                                          # myf int 2
+    128, 0, 0, 0,                                  # myf dint
+    255, 255,                                      # myf word
+    0, 16,                                         # myf s5time, 0 is the time base,
                                                    # 16 is value, those two integers should be declared together
     32, 7, 18, 23, 50, 2, 133, 65,                 # these 8 values build the date and time 12 byte total
                                                    # data typ together, for details under this link
                                                    # https://support.industry.siemens.com/cs/document/36479/date_and_time-format-bei-s7-?dti=0&lc=de-DE
-    254, 254, 254, 254, 254, 127,                  # test small int
-    128,                                           # test set byte
-    143, 255, 255, 255,                            # test time
-    254,                                           # test byte              0xFE
-    48, 57,                                        # test uint              12345
-    7, 91, 205, 21,                                # test udint             123456789
-    65, 157, 111, 52, 84, 126, 107, 117,           # test lreal             123456789.123456789
-    65,                                            # test char              A
-    3, 169,                                        # test wchar             Ω
-    0, 4, 0, 4, 3, 169, 0, ord('s'), 0, ord('t'), 0, 196,  # test wstring   Ω s t Ä
-    45, 235,                                       # test date              09.03.2022
-    2, 179, 41, 128,                               # test tod               12:34:56
-    7, 230, 3, 9, 4, 12, 34, 45, 0, 0, 0, 0,       # test dtl               09.03.2022 12:34:56
-    116, 101, 115, 116, 32, 32, 32, 32             # test fstring           'test    '
+    254, 254, 254, 254, 254, 127,                  # myf small int
+    128,                                           # myf set byte
+    143, 255, 255, 255,                            # myf time
+    254,                                           # myf byte              0xFE
+    48, 57,                                        # myf uint              12345
+    7, 91, 205, 21,                                # myf udint             123456789
+    65, 157, 111, 52, 84, 126, 107, 117,           # myf lreal             123456789.123456789
+    65,                                            # myf char              A
+    3, 169,                                        # myf wchar             Ω
+    0, 4, 0, 4, 3, 169, 0, ord('s'), 0, ord('t'), 0, 196,  # myf wstring   Ω s t Ä
+    45, 235,                                       # myf date              09.03.2022
+    2, 179, 41, 128,                               # myf tod               12:34:56
+    7, 230, 3, 9, 4, 12, 34, 45, 0, 0, 0, 0,       # myf dtl               09.03.2022 12:34:56
+    116, 101, 115, 116, 32, 32, 32, 32             # myf fstring           'myf    '
 ])
 
 _new_bytearray = bytearray(100)
@@ -215,7 +215,7 @@ class TestS7util(unittest.TestCase):
         test_array = bytearray(_bytearray)
 
         row = util.DB_Row(test_array, test_spec, layout_offset=4)
-        self.assertEqual(row['NAME'], 'test')
+        self.assertEqual(row['NAME'], 'myf')
 
     def test_write_string(self):
         test_array = bytearray(_bytearray)
@@ -244,13 +244,13 @@ class TestS7util(unittest.TestCase):
         test_array = bytearray(_bytearray)
         row = util.DB_Row(test_array, test_spec, layout_offset=4)
         value = row['testFstring']
-        self.assertEqual(value, 'test')
+        self.assertEqual(value, 'myf')
 
     def test_get_fstring_index(self):
         test_array = bytearray(_bytearray)
         row = util.DB_Row(test_array, test_spec, layout_offset=4)
         value = row.get_value(98, 'FSTRING[8]')  # get value
-        self.assertEqual(value, 'test')
+        self.assertEqual(value, 'myf')
 
     def test_set_fstring(self):
         data = bytearray(20)
@@ -371,7 +371,7 @@ class TestS7util(unittest.TestCase):
             self.assertEqual(row['testbool6'], 0)
             self.assertEqual(row['testbool7'], 0)
             self.assertEqual(row['testbool8'], 0)
-            self.assertEqual(row['NAME'], 'test')
+            self.assertEqual(row['NAME'], 'myf')
 
     def test_db_export(self):
         test_array = bytearray(_bytearray * 10)
@@ -392,7 +392,7 @@ class TestS7util(unittest.TestCase):
             self.assertEqual(db_export[i]['testbool6'], 0)
             self.assertEqual(db_export[i]['testbool7'], 0)
             self.assertEqual(db_export[i]['testbool8'], 0)
-            self.assertEqual(db_export[i]['NAME'], 'test')
+            self.assertEqual(db_export[i]['NAME'], 'myf')
 
     def test_get_real(self):
         test_array = bytearray(_bytearray)

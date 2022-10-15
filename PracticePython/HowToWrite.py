@@ -11,7 +11,7 @@ total = item_val+\
         x
 
 def Function_Signiture():
-    print("test function")
+    print("myf function")
 
 
 sessons_array =['Autumn', 'Winter', 'Spring', 'Summer']

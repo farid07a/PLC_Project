@@ -83,7 +83,7 @@ class TestClient(unittest.TestCase):
     def test_read_multi_vars(self):
         db = 1
 
-        # build and write test values
+        # build and write myf values
         test_value_1 = 129.5
         test_bytes_1 = bytearray(struct.pack('>f', test_value_1))
         self.client.db_write(db, 0, test_bytes_1)
@@ -139,7 +139,7 @@ class TestClient(unittest.TestCase):
         # function to cast bytes to match data_types[] above
         byte_to_value = [util.get_real, util.get_real, util.get_int]
 
-        # unpack and test the result of each read
+        # unpack and myf the result of each read
         for i in range(len(data_items)):
             btv = byte_to_value[i]
             di = data_items[i]
@@ -231,7 +231,7 @@ class TestClient(unittest.TestCase):
         self.assertRaises(ValueError, self.client.list_blocks_of_type, 'NOblocktype', 10)
 
     def test_get_block_info(self):
-        """test Cli_GetAgBlockInfo"""
+        """myf Cli_GetAgBlockInfo"""
         self.client.get_block_info('DB', 1)
 
         self.assertRaises(Exception, self.client.get_block_info,
@@ -566,7 +566,7 @@ class TestClient(unittest.TestCase):
         start = 1
         data = bytearray(size)
         self.client.write_area(area, dbnumber, start, data)
-        # start as_request and test
+        # start as_request and myf
         wordlen, usrdata = self.client._prepare_as_read_area(area, size)
         pusrdata = ctypes.byref(usrdata)
         self.client.as_read_area(area, dbnumber, start, size, wordlen, pusrdata)
@@ -601,7 +601,7 @@ class TestClient(unittest.TestCase):
                 self.fail(f"While waiting another error appeared:>>>>>>>> {res}")
 
         self.fail(f"After {tries} tries, no timout could be envoked by snap7. Either tests are passing to fast or"
-                  f"a problem is existing in the method. Fail test.")
+                  f"a problem is existing in the method. Fail myf.")
 
     def test_check_as_completion(self, timeout=5):
         # Cli_CheckAsCompletion
@@ -615,7 +615,7 @@ class TestClient(unittest.TestCase):
         start = 1
         self.client.write_area(area, db, start, data)
 
-        # start as_request and test
+        # start as_request and myf
         wordlen, cdata = self.client._prepare_as_read_area(area, size)
         pcdata = ctypes.byref(cdata)
         self.client.as_read_area(area, db, start, size, wordlen, pcdata)

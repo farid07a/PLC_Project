@@ -7,7 +7,7 @@ from snap7.common import find_locally
 
 logging.basicConfig(level=logging.WARNING)
 
-file_name_test = "test.dll"
+file_name_test = "myf.dll"
 
 
 class TestCommon(unittest.TestCase):

@@ -6,13 +6,13 @@ arr = bytearray(rList)
 
 arr2 = bytearray(15)
 
-
-
 print("arr1", arr)
 
 print("arr2", arr2)
 
 arr2.append(60)
+print(arr2)
+
 
 arr2[3] = 20
 

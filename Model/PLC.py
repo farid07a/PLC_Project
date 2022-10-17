@@ -1,9 +1,9 @@
 from time import sleep
 
-import MySQLdb
+#import MySQLdb
 from snap7 import client
 import mysql.connector
-from PracticePython import ConnectionMysqlDB
+
 from PracticePython.ConnectionMysqlDB import ConnectionMysqlDB
 from data_type import DataType
 
@@ -107,6 +107,7 @@ class plcMachine:
 
     def insert_new_plc(self):  # Tested Pass
         query = "INSERT INTO plc_controller (Model,IP,RACK,	SLOT) values (%s,%s,%s,%s)"
+        cursor = None
         try:
             self.connection_mysql.connecting()
             cursor = self.connection_mysql.get_connection().cursor()
@@ -118,7 +119,7 @@ class plcMachine:
         finally:
             if self.connection_mysql.get_connection().is_connected():
                 cursor.close()
-                self.connection_mysql.get_connection().is_connected()
+                self.connection_mysql.get_connection().close()
                 print("MySQL connection is closed")
 
     def get_list_plc(self):  # Tested is passed

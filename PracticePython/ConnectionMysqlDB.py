@@ -9,6 +9,7 @@ class ConnectionMysqlDB:
 
     connection_db = mysql.connector.connect()
 
+
     def connecting(self):
         try:
             if not self.connection_db.is_connected():

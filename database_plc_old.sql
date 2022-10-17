@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2022 at 05:09 PM
--- Server version: 10.4.25-MariaDB
--- PHP Version: 7.4.30
+-- Generation Time: Oct 16, 2022 at 08:00 PM
+-- Server version: 10.4.6-MariaDB
+-- PHP Version: 7.3.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -46,15 +47,6 @@ CREATE TABLE `plc_controller` (
   `SLOT` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `plc_controller`
---
-
-INSERT INTO `plc_controller` (`ID_PLC`, `IP_Address`, `RACK`, `SLOT`) VALUES
-(12, '172.16.5.182', 0, 1),
-(13, '192.168.1.75', 0, 1),
-(14, '192.168.1.66', 0, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -69,14 +61,6 @@ CREATE TABLE `tag` (
   `Address_start_bit` int(11) NOT NULL,
   `ID_PLC` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `tag`
---
-
-INSERT INTO `tag` (`ID_Tag`, `Name`, `Data_Type`, `Address_start_byte`, `Address_start_bit`, `ID_PLC`) VALUES
-(5, 'tag1', 'int', 0, -1, 12),
-(6, 'tag2', 'bool', 1, 0, 12);
 
 -- --------------------------------------------------------
 
@@ -146,13 +130,13 @@ ALTER TABLE `input_table`
 -- AUTO_INCREMENT for table `plc_controller`
 --
 ALTER TABLE `plc_controller`
-  MODIFY `ID_PLC` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `ID_PLC` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `ID_Tag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID_Tag` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables

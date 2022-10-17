@@ -23,7 +23,7 @@ class tag:
     #     self.Address_start_bit = Address_start_bit
     #     self.ID_PLC = ID_PLC
 
-    def create_object(self, ID_Tag,Name,Data_Type,Address_start_byte,Address_start_bit,ID_PLC):
+    def create_object(self, ID_Tag, Name, Data_Type, Address_start_byte, Address_start_bit, ID_PLC):
         self.ID_Tag = ID_Tag
         self.Name = Name
         self.Data_Type = Data_Type
@@ -65,10 +65,8 @@ class tag:
     def set_id_address_start_bit(self, Address_start_bit):
         self.Address_start_bit = Address_start_bit
 
-    def set_id_ipl(self,ID_PLC):
+    def set_id_ipl(self, ID_PLC):
         self.ID_PLC = ID_PLC
-
-
 
     # def test_connecttion(self):
     #     print("")
@@ -84,14 +82,13 @@ class tag:
     #         print(e)
     #         sleep(1)
     #         self.test_connecttion()
-    def insert_tag(self):
+    def insert_tag_in_database(self):
         self.set_data_of_tag()
         query = "INSERT INTO tag (Name,Data_Type,Address_start_byte,Address_start_bit,ID_PLC) " \
                 "        VALUES (%s  ,%s       ,%s                ,%s               ,%s)"
         cursor = None
         try:
             self.connection_mysql.connecting()
-
             val = (self.Name, self.Data_Type, self.Address_start_byte, self.Address_start_bit, self.ID_PLC)
             cursor = self.connection_mysql.get_connection().cursor()
             cursor.execute(query, val)
@@ -128,6 +125,8 @@ class tag:
             self.Address_start_bit = -1
 
         self.ID_PLC = int(input("Input PLC Number : "))
+
+    def get_id_tag_from_database(self):
 
 
 

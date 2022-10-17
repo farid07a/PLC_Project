@@ -1,5 +1,4 @@
 from time import sleep
-import MySQLdb
 import mysql.connector
 from mysql.connector import Error
 #from mysql.connector import CMySQLConnection
@@ -14,7 +13,7 @@ class ConnectionMysqlDB:
         try:
             if not self.connection_db.is_connected():
                 print("Var myf Connection : ", self.connection_db.is_connected())
-                self.connection_db=mysql.connector.connect(host='localhost', user='root', passwd='', database='test')
+                self.connection_db = mysql.connector.connect(host='localhost', user='root', passwd='', database='database_plc')
                 print("Success Connecting dataBase")
             else:
                 print("Deja connecting")
@@ -24,17 +23,17 @@ class ConnectionMysqlDB:
             sleep(1)
             self.connecting()
 
-    def get_data(self):
-        self.connecting()
-        print(self.connection.is_connected())
-        print("After get dta ")
-        cursor = self.connection.cursor()
-        cursor.execute('SELECT * FROM tag')
-        result = cursor.fetchall()
-        for row in result:
-            print(row)
-        cursor.close()
-        self.connection.close()
+    # def get_data(self):
+    #     self.connecting()
+    #     print(self.connection.is_connected())
+    #     print("After get dta ")
+    #     cursor = self.connection.cursor()
+    #     cursor.execute('SELECT * FROM tag')
+    #     result = cursor.fetchall()
+    #     for row in result:
+    #         print(row)
+    #     cursor.close()
+    #     self.connection.close()
 
 
     # def connecting(self):

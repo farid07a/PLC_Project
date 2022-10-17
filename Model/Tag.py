@@ -15,13 +15,13 @@ class tag:
     ID_PLC=0
     connection_mysql = ConnectionMysqlDB()
 
-    # def __init__(self,ID_Tag,Name,Data_Type,Address_start_byte,Address_start_bit,ID_PLC):
-    #     self.ID_Tag = ID_Tag
-    #     self.Name = Name
-    #     self.Data_Type = Data_Type
-    #     self.Address_start_byte = Address_start_byte
-    #     self.Address_start_bit = Address_start_bit
-    #     self.ID_PLC = ID_PLC
+    # def __init__(self):
+    #      self.ID_Tag = 0
+    #      self.Name = ""
+    #      self.Data_Type = ""
+    #      self.Address_start_byte = 0
+    #      self.Address_start_bit = 0
+    #      self.ID_PLC = 0
 
     def create_object(self, ID_Tag, Name, Data_Type, Address_start_byte, Address_start_bit, ID_PLC):
         self.ID_Tag = ID_Tag
@@ -126,9 +126,35 @@ class tag:
 
         self.ID_PLC = int(input("Input PLC Number : "))
 
-    def get_id_tag_from_database(self):
+    def get_data_tags_in_database(self):
+        query = "select * from tag"
+        cursor = None
+        list_tag = []
+        try:
+            self.connection_mysql.connecting()
+            cursor=self.connection_mysql.get_connection().cursor()
+            cursor.execute(query)
+            list_tag=cursor.fetchall()
+        except:
+            print("Error connection")
+        finally:
+            if self.connection_mysql.get_connection().is_connected():
+                self.connection_mysql.get_connection().close()
+                cursor.close()
 
+        return list_tag
 
+    def list_of_tags(self):
+        data_from_database = self.get_data_tags_in_database()
+        list_obj_tags=[]
+        for row in data_from_database:
+            tag_obj = tag()
+            tag_obj.create_object(row[0],row[1],row[2],row[3],row[4],row[5])
+            list_obj_tags.append(tag_obj)
+        return list_obj_tags
+
+    def reserverd_adress_db(self):
+        print("")
 
     def menu_inert_tag(self):
         c='a'
@@ -138,8 +164,6 @@ class tag:
 
 
 
-obj = tag("temp",bytearray(),3,"",1)
-obj.insert_tag()
 
 
 

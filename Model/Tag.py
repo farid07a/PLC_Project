@@ -149,14 +149,38 @@ class tag:
             list_obj_tags.append(tag_obj)
         return list_obj_tags
 
-    def reserverd_adress_db(self):
-        print("")
+    def get_size_db(self):
+        list_tags = self.list_of_tags()
+        size_list_tag = len(list_tags)
+        print("Number of Tags :", size_list_tag)
 
-    def menu_inert_tag(self):
-        c='a'
-        #while c!= 'q':
+        data_type_last_tag = list_tags[size_list_tag - 1].get_data_type()
+        address_last_tag=list_tags[size_list_tag - 1].get_address_start_byte()
+        if data_type_last_tag=="int":
+            address_last_tag+=2
+        elif data_type_last_tag == "real":
+            address_last_tag+=4
+        elif data_type_last_tag=="bool":
+            address_last_tag+=1
+        size_data_block = address_last_tag
 
+        return size_data_block
 
+    def diplay_all_tags_and_time(self):
+        cursor=None
+        query="SELECT input_table.ID_Input, tag.Name, tag_input.Value_Tag, input_table.Time_Input, plc_controller.ID_PLC " \
+              "FROM tag_input, tag, input_table, plc_controller " \
+              " WHERE plc_controller.ID_PLC = tag.ID_PLC " \
+              " AND tag.ID_Tag = tag_input.ID_Tag " \
+              " AND input_table.ID_Input = tag_input.ID_Input" \
+              ""
+        try:
+            self.connection_mysql.connecting()
+            cursor=self.connection_mysql.get_connection().cursor()
+            cursor.execute(query)
+            result=cursor.fetchall()
+
+            for row in
 
 
 

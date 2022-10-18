@@ -216,9 +216,9 @@ class plcMachine:
                 print("Close Menu")
                 flag = False
 
-obj = plcMachine("S7 1200", "172.16.5.100", 0, 1)
-
-obj.menu()
+# obj = plcMachine("S7 1200", "172.16.5.100", 0, 1)
+#
+# obj.menu()
 
 
 # table Local

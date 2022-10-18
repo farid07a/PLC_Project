@@ -25,7 +25,7 @@ class InputData:
 
             data_read = (self.Data_Input, now.strftime('%d-%m-%Y %H:%M:%S'))
             cursor.execute(query, data_read)
-            print("Success Insert Data")
+            print("Success Insert Data input ")
             self.connection_mysql.get_connection().commit()
         except mysql.connector.Error as error:
             print(error)
@@ -36,14 +36,16 @@ class InputData:
 
     def get_last_operation_read(self):
         query="SELECT MAX(ID_Input) FROM input_table"
-        last_op=0
+        last_id=0
         cursor=None
         try:
             self.connection_mysql.connecting()
             cursor = self.connection_mysql.get_connection().cursor()
             cursor.execute(query)
-            last_op=cursor.fetchall()
-            print(last_op)
+            list_op=cursor.fetchall()
+            #print(last_op)
+            for i in list_op:
+                last_id = i[0]
 
         except mysql.connector.Error as error:
             print(error)
@@ -51,10 +53,10 @@ class InputData:
             if self.connection_mysql.get_connection().is_connected():
                 cursor.close()
                 self.connection_mysql.disconnect()
-        return last_op
+        return last_id
 
-
-ReadObj = InputData()
-ReadObj.insert_input_data()
-print(ReadObj.get_last_operation_read())
+#
+# ReadObj = InputData()
+# ReadObj.insert_input_data()
+# print(ReadObj.get_last_operation_read())
 

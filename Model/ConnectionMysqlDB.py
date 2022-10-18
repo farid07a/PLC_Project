@@ -12,9 +12,9 @@ class ConnectionMysqlDB:
     def connecting(self):
         try:
             if not self.connection_db.is_connected():
-                print("Var myf Connection : ", self.connection_db.is_connected())
+                # print("Var myf Connection : ", self.connection_db.is_connected())
                 self.connection_db = mysql.connector.connect(host='localhost', user='root', passwd='', database='database_plc')
-                print("Success Connecting dataBase")
+                # print("Success Connecting dataBase")
             else:
                 print("Deja connecting")
         # When Error in connection has Occurred

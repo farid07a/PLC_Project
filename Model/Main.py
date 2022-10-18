@@ -5,6 +5,7 @@ from snap7 import client
 
 from Model.PLC import plcMachine
 from Model.ReadData import InputData
+from Model.SplitDataPackage import SplitDataPackage
 
 IP = "192.168.0.1"
 RACK = 0
@@ -14,8 +15,8 @@ from Model.Tag import tag
 
 tag = tag()
 plc_obj = plcMachine()
-
-read_data_obj= InputData()
+read_data_obj = InputData()
+split_data_tag = SplitDataPackage()
 
 plc = client.Client()
 
@@ -39,23 +40,25 @@ while True:
         list_tags=tag.list_of_tags()      # get list of tags to get id and
 
         for tag_i in list_tags:
-
             id_tag = tag_i.get_id_tag()
             data_type = tag_i.get_data_type()
             addres_byte = tag_i.get_address_start_byte()
-            addres_bit = tag_i.get_address_start_bit()
-            part_of_tag=bytearray()
-            if data_type=="int":
-                part_of_tag=db[addres_byte:addres_byte + 2]
-                print(int.from_bytes(part_of_tag,"big") )
-                #get_int(db,addres_byte) Python : dtype = 4 byte
-            elif data_type=="real":
+
+            if data_type == "int":
+                part_of_tag = db[addres_byte:addres_byte + 2]
+                print(get_int(db, addres_byte))
+
+            elif data_type == "real":
                 part_of_tag = db[addres_byte:addres_byte + 4]
-                print(float.from_bytes(part_of_tag, "big"))
-                # get_real(db,addres_byte) Python : dtype = 8 byte
-            else:
-                part_of_tag=db[addres_byte:addres_byte + 1]
-                print()
+                print(get_int(db, addres_byte))
+
+            elif data_type == "bool":
+                addres_bit = tag_i.get_address_start_bit()
+                part_of_tag = db[addres_byte:addres_byte + 1]
+                print(snap7.util.get_bool(db,addres_byte,addres_bit))
+
+            id_read= read_data_obj.get_last_operation_read()
+            split_data_tag.create(id_tag,)
 
 
 

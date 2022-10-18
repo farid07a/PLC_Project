@@ -1,8 +1,4 @@
-from time import sleep
-
-import mysql.connector
-
-from PracticePython.ConnectionMysqlDB import ConnectionMysqlDB
+from Model.ConnectionMysqlDB import ConnectionMysqlDB
 
 
 class tag:

@@ -3,7 +3,7 @@ from snap7 import client
 import mysql.connector
 
 from Model.Tag import tag
-from PracticePython.ConnectionMysqlDB import ConnectionMysqlDB
+from Model.ConnectionMysqlDB import ConnectionMysqlDB
 from data_type import DataType
 
 

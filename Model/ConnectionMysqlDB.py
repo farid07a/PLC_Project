@@ -7,13 +7,11 @@ from mysql.connector import Error
 class ConnectionMysqlDB:
 
     connection_db = mysql.connector.connect()
-
-
     def connecting(self):
         try:
             if not self.connection_db.is_connected():
                 # print("Var myf Connection : ", self.connection_db.is_connected())
-                self.connection_db = mysql.connector.connect(host='localhost', user='root', passwd='', database='database_plc')
+                self.connection_db = mysql.connector.connect(host='localhost', user='root', passwd='', database= 'database_plc')
                 # print("Success Connecting dataBase")
             else:
                 print("Deja connecting")
@@ -56,8 +54,9 @@ class ConnectionMysqlDB:
     def disconnect(self):
         self.connection_db.close()
 
-# obj_cnx=ConnectionMysqlDB()
-# obj_cnx.connecting()
+
+obj_cnx = ConnectionMysqlDB()
+obj_cnx.connecting()
 # statCon=obj_cnx.get_connection().is_connected()
 # print(statCon)
 

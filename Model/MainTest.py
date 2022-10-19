@@ -2,7 +2,7 @@ from time import sleep
 import snap7
 from snap7.util import *
 from snap7 import client
-
+from Model.Tag import tag
 from Model.PLC import plcMachine
 from Model.ReadData import InputData
 from Model.SplitDataPackage import SplitDataPackage
@@ -11,7 +11,7 @@ IP = "192.168.0.1"
 RACK = 0
 SLOT = 1
 
-from Model.Tag import tag
+
 
 tag = tag()
 # plc_obj = plcMachine()
@@ -32,7 +32,18 @@ print("Size Of data Block :",SIZE)
 # db = plc.db_read(DB_NUMBER, START_ADDRESS, SIZE) # REPLACE by test db byteArray
 rList = [1, 0, 3, 0, 5,0]
 
+
+
 db=bytearray(rList)
+
+db=bytearray(20)
+
+snap7.util.set_int(db,0,154)
+snap7.util.set_real(db,2,40.5)
+snap7.util.set_bool(db,6,0,0)
+snap7.util.set_bool(db,6,1,1)
+snap7.util.set_real(db,7,0.78)
+
 
 print("db array :", db)
 

@@ -1,5 +1,8 @@
-from Model.ConnectionMysqlDB import ConnectionMysqlDB
+import snap7.util
+from snap7.util import get_int, get_real
 
+from Model.ConnectionMysqlDB import ConnectionMysqlDB
+import mysql.connector
 
 class tag:
 
@@ -90,8 +93,8 @@ class tag:
             cursor.execute(query, val)
             self.connection_mysql.get_connection().commit()
             print("Success Add Tag")
-        except BaseException as e:
-            print(e)
+        except mysql.connector.Error as error:
+            print(error)
         finally:
             if self.connection_mysql.get_connection().is_connected():
                 self.connection_mysql.get_connection().close()
@@ -131,8 +134,8 @@ class tag:
             cursor=self.connection_mysql.get_connection().cursor()
             cursor.execute(query)
             list_tag=cursor.fetchall()
-        except:
-            print("Error connection")
+        except mysql.connector.Error as error:
+            print(error)
         finally:
             if self.connection_mysql.get_connection().is_connected():
                 self.connection_mysql.get_connection().close()
@@ -166,22 +169,48 @@ class tag:
 
         return size_data_block
 
-    def diplay_all_tags_and_time(self):
-        cursor=None
-        query="SELECT input_table.ID_Input, tag.Name, tag_input.Value_Tag, input_table.Time_Input, plc_controller.ID_PLC " \
-              "FROM tag_input, tag, input_table, plc_controller " \
-              " WHERE plc_controller.ID_PLC = tag.ID_PLC " \
-              " AND tag.ID_Tag = tag_input.ID_Tag " \
-              " AND input_table.ID_Input = tag_input.ID_Input" \
-              ""
+    def display_all_tags_and_time(self):
+        cursor = None
+        query = "SELECT input_table.ID_Input," \
+                " tag.Name, tag.Data_Type, tag.Address_start_bit," \
+                "tag_input.Value_Tag," \
+                " input_table.Time_Input, plc_controller.ID_PLC " \
+                "FROM tag_input, tag, input_table, plc_controller " \
+                " WHERE plc_controller.ID_PLC = tag.ID_PLC " \
+                " AND tag.ID_Tag = tag_input.ID_Tag " \
+                " AND input_table.ID_Input = tag_input.ID_Input" \
+                ""
         try:
             self.connection_mysql.connecting()
             cursor=self.connection_mysql.get_connection().cursor()
             cursor.execute(query)
             result=cursor.fetchall()
 
-            for row in
+            for row in result:
 
+                id_op=row[0]
+                name_tag = row[1]
+                data_type = row[2]
+                value=0
+                if data_type== "int":
+                    value= get_int(row[4],0)
+                elif data_type=="real":
+                    value = snap7.util.get_real(row[4],0)
+                elif data_type == "bool":
+                    ad_bit=row[3]
+                    value = snap7.util.get_bool(row[4],0,ad_bit)
+                print("ID_op:", id_op , " Name:", name_tag, "data_type:",data_type," value:",value)
+
+        except mysql.connector.Error as error:
+            print(error)
+        finally:
+            if self.connection_mysql.get_connection().is_connected():
+                cursor.close()
+                self.connection_mysql.disconnect()
+
+
+tag = tag()
+tag.display_all_tags_and_time()
 
 
 

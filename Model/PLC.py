@@ -217,7 +217,6 @@ class plcMachine:
                 flag = False
 
 # obj = plcMachine("S7 1200", "172.16.5.100", 0, 1)
-#
 # obj.menu()
 
 

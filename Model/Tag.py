@@ -198,7 +198,7 @@ class tag:
                     value = snap7.util.get_real(row[4],0)
                 elif data_type == "bool":
                     ad_bit=row[3]
-                    value = snap7.util.get_bool(row[4],0,ad_bit)
+                    value = snap7.util.get_bool(row[4], 0, ad_bit)
                 print("ID_op:", id_op , " Name:", name_tag, "data_type:",data_type," value:",value)
 
         except mysql.connector.Error as error:
@@ -219,12 +219,19 @@ class tag:
                 memory_cases_occupeid_byte.append(start_adres_byte+1)
 
             elif tag.get_data_type() == "real":
+                memory_cases_occupeid_byte.append(start_adres_byte)
                 for ad in range(start_adres_byte, start_adres_byte+4):
                     print(ad)
                     memory_cases_occupeid_byte.append(ad)
-            elif tag.get_data_type()=="bool":
+            elif tag.get_data_type() == "bool":
+                memory_cases_occupeid_byte.append(start_adres_byte)
+                start_address_bit = tag.get_address_start_bit()
+                memory_cases_occupeid_bit.append(start_adres_byte+"_"+start_address_bit)
                 print("--------------------")
 
+        list_address_byte_and_bit = [memory_cases_occupeid_byte,memory_cases_occupeid_bit]
+
+        return list_address_byte_and_bit
 
 # tag = tag()
 # tag.display_all_tags_and_time()

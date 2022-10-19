@@ -17,12 +17,14 @@ tag = tag()
 # plc_obj = plcMachine()
 read_data_obj = InputData()
 split_data_tag = SplitDataPackage()
-
 plc = client.Client()
+
 try:
     plc.connect(IP, RACK, SLOT)
 except:
     print("pass connection physic plc ")
+
+
 "===== read Date from Block Date type bool====="
 DB_NUMBER = 1  # The date block number to be read.
 START_ADDRESS = 0  # Starting Address Reading into Reading Block Date.

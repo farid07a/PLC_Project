@@ -22,7 +22,6 @@ class InputData:
             self.connection_mysql.connecting()
             cursor = self.connection_mysql.get_connection().cursor()
             now = datetime.now()
-
             data_read = (self.Data_Input, now.strftime('%d-%m-%Y %H:%M:%S'))
             cursor.execute(query, data_read)
             print("Success Insert Data input ")

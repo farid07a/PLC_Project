@@ -33,8 +33,6 @@ START_ADDRESS = 0  # Starting Address Reading into Reading Block Date.
 SIZE = tag.get_size_db()  # Number of bytes to read from Date blocks.
 print("Size Of data Block :", SIZE)
 
-
-
 while True:
 
     if plc.get_connected():
@@ -49,8 +47,7 @@ while True:
             data_type = tag_i.get_data_type()
             addres_byte = tag_i.get_address_start_byte()
 
-            print("ID_tag:", id_tag, "data_type:", data_type, "addres_byte:", addres_byte, "End_adres_byte",
-                  addres_byte + 2)
+            print("ID_tag:", id_tag, "data_type:", data_type, "addres_byte:", addres_byte,"End_adres_byte",addres_byte + 2)
             part_of_tag = bytearray(4)
 
             if data_type == "int":
@@ -74,60 +71,9 @@ while True:
 
             split_data_tag.insert_split_data_package_database()  # insert data in database
 
-        print(db)
-
-        print(get_bool(db, 0, 0))
-        print(get_bool(db, 0, 1))
-        print(get_bool(db, 0, 2))
-        print(get_bool(db, 0, 3))
-        print(get_bool(db, 0, 4))
-        print(get_bool(db, 0, 5))
-        print(get_bool(db, 0, 6))
-        print(get_bool(db, 0, 7))
-        print(get_bool(db, 1, 0))
-
-        print(get_bool(db, 1, 1))
-        print(get_int(db, 46))
-        print("--------------")
-        # insert tags(in DB)
-
         sleep(1)
     else:
         print("PLC no connected")
         break
 
-""""
- get_exec_time
- get_last_error
- get_order_code
- get_cpu_state()
 
- buffer = bytearray([0b00000000])
-plc.db_write(1, 0, buffer)
-
-
-plc_info = plc.get_cpu_info()
-print(f"adı: {plc_info.ModuleTypeName}")
-buffer = bytearray(db)
-print(plc.get_cpu_info())
-print(plc.get_plc_datetime())
-sleep(2)
-
-    db = plc.db_read(DB_NUMBER, START_ADDRESS, SIZE)
-    print("=====bool=====")
-    buffer = bytearray(db)
-    print(get_bool(buffer, 0, 0))
-    print(get_bool(buffer, 0, 1))
-    print(get_bool(buffer, 0, 2))
-
-===== read Date from Block Date type real====="
-START_ADDRESS = 2  # The date block number to be read.
-SIZE = 32  # Starting Address Reading into Reading Block Date.
-i = 0  # Number of bytes to read from Date blocks.
-while True:
-    print("===== real=====")
-    db = plc.db_read(DB_NUMBER, START_ADDRESS, SIZE)
-    real = struct.iter_unpack("!f", db[:SIZE])
-    i += 1
-    print("DATA READING:", i, [f for f, in real])
-    sleep(1)"""

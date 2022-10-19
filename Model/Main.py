@@ -14,7 +14,6 @@ SLOT = 1
 from Model.Tag import tag
 
 tag = tag()
-plc_obj = plcMachine()
 read_data_obj = InputData()
 split_data_tag = SplitDataPackage()
 

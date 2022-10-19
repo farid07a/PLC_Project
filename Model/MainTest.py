@@ -44,7 +44,6 @@ snap7.util.set_bool(db,6,0,0)
 snap7.util.set_bool(db,6,1,1)
 snap7.util.set_real(db,7,0.78)
 
-
 print("db array :", db)
 
 read_data_obj.Data_Input = db  # set dataBloc to DataInput to save with operation

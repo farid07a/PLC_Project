@@ -208,9 +208,26 @@ class tag:
                 cursor.close()
                 self.connection_mysql.disconnect()
 
+    def occupied_memory_cases(self):
+        list_tags = self.list_of_tags()
+        memory_cases_occupeid_byte=[]
+        memory_cases_occupeid_bit = []
+        for tag in list_tags:
+            start_adres_byte = tag.get_address_start_byte()
+            if tag.get_data_type() == "int":
+                memory_cases_occupeid_byte.append(start_adres_byte)
+                memory_cases_occupeid_byte.append(start_adres_byte+1)
 
-tag = tag()
-tag.display_all_tags_and_time()
+            elif tag.get_data_type() == "real":
+                for ad in range(start_adres_byte, start_adres_byte+4):
+                    print(ad)
+                    memory_cases_occupeid_byte.append(ad)
+            elif tag.get_data_type()=="bool":
+                print("--------------------")
+
+
+# tag = tag()
+# tag.display_all_tags_and_time()
 
 
 

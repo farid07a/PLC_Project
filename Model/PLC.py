@@ -2,9 +2,12 @@
 from snap7 import client
 import mysql.connector
 
-from Model.Tag import tag
+
 from Model.ConnectionMysqlDB import ConnectionMysqlDB
-from data_type import DataType
+#from data_type import DataType
+from Model.Tag import tag
+
+from Model.data_type import DataType
 
 
 class plcMachine:
@@ -133,12 +136,13 @@ class plcMachine:
             list_plc = cursor.fetchall()
             for id in list_plc:
                 print(id[0])
-            cursor.close
 
+            cursor.close
         except mysql.connector.Error as error :
             print(error)
         finally:
             self.connection_mysql.get_connection().close()
+
         return list_plc
 
     def display_plcs_in_table(self):  # tested pass
@@ -148,8 +152,8 @@ class plcMachine:
         for plc in list_plc:
             print("|", plc[0], "\t |", plc[1], "\t |", plc[2], "\t \t |", plc[3], "\t |" "\t|")
 
-
-    def add_new_colum_in_plc_table(self, name, value):
+    # TODO: use for insert new Colum later
+    def add_new_colum_in_plc_table(self, name, value): # depracate
         datatype_obj = DataType()
         try:
             connection = mysql.connector.connect(user='root', passwd='', host='localhost', database='myf')

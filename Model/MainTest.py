@@ -32,19 +32,16 @@ SIZE = tag.get_size_db() # Number of bytes to read from Date blocks.
 print("Size Of data Block :",SIZE)
 
 # db = plc.db_read(DB_NUMBER, START_ADDRESS, SIZE) # REPLACE by test db byteArray
-rList = [1, 0, 3, 0, 5,0]
 
-
-
-db=bytearray(rList)
 
 db=bytearray(20)
 
-snap7.util.set_int(db,0,154)
-snap7.util.set_real(db,2,40.5)
-snap7.util.set_bool(db,6,0,0)
-snap7.util.set_bool(db,6,1,1)
-snap7.util.set_real(db,7,0.78)
+set_int(db,0,300)
+set_real(db,2,55.5)
+set_bool(db,6,0,1)
+set_bool(db,6,1,0)
+set_real(db,7,12.51)
+set_bool(db,11,0,1)
 
 print("db array :", db)
 
@@ -69,12 +66,11 @@ for tag_i in list_tags:
     elif data_type == "real":
         part_of_tag = db[addres_byte:addres_byte + 4]
         print(get_int(db, addres_byte))
-        part_of_tag
+
     elif data_type == "bool":
         addres_bit = tag_i.get_address_start_bit()
         part_of_tag = db[addres_byte:addres_byte + 1]
         print(snap7.util.get_bool(db, addres_byte, addres_bit))
-
 
     id_read= read_data_obj.get_last_operation_read() # return last id of Operation Read
     print("Last ID of Operationread :",id_read)
@@ -82,7 +78,6 @@ for tag_i in list_tags:
     split_data_tag.create(id_tag, id_read, part_of_tag) #
 
     split_data_tag.insert_split_data_package_database() # insert data in database
-
 
 
 

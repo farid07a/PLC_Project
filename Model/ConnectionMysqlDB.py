@@ -21,30 +21,6 @@ class ConnectionMysqlDB:
             sleep(1)
             self.connecting()
 
-    # def get_data(self):
-    #     self.connecting()
-    #     print(self.connection.is_connected())
-    #     print("After get dta ")
-    #     cursor = self.connection.cursor()
-    #     cursor.execute('SELECT * FROM tag')
-    #     result = cursor.fetchall()
-    #     for row in result:
-    #         print(row)
-    #     cursor.close()
-    #     self.connection.close()
-
-
-    # def connecting(self):
-    #
-    #     try:
-    #         if self.connection.is_connected():
-    #             self.connection = mysql.connector.connect(host='localhost', user='root', passwd='', database='myf')
-    #         print("Success Connecting")
-    #     except MySQLdb.Error as e:
-    #         print("No connection")
-    #         sleep(1)
-    #         self.connecting()
-
     def get_connection(self):
         return self.connection_db
 
@@ -54,9 +30,9 @@ class ConnectionMysqlDB:
     def disconnect(self):
         self.connection_db.close()
 
-
 obj_cnx = ConnectionMysqlDB()
 obj_cnx.connecting()
+
 # statCon=obj_cnx.get_connection().is_connected()
 # print(statCon)
 

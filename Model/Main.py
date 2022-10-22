@@ -58,7 +58,7 @@ while True:
             elif data_type == "real":
                 part_of_tag = db[addres_byte:addres_byte + 4]
                 print(get_int(db, addres_byte))
-                part_of_tag
+
             elif data_type == "bool":
                 addres_bit = tag_i.get_address_start_bit()
                 part_of_tag = db[addres_byte:addres_byte + 1]

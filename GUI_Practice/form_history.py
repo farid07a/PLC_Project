@@ -94,6 +94,8 @@ class history(QWidget):
             number_tag = len(list_by_id_operation)
             print("Number Of tags in operation :", i)
             self.tab_history.insertRow(i)
+            time_read=""
+            plc_id=""
             for j in range(0, len(list_by_id_operation)):
                 print("--  iteration  --", j)
                 tupele_id_op = list_by_id_operation[j]
@@ -110,10 +112,15 @@ class history(QWidget):
                     value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
 
                 print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
+                time_read = str(tupele_id_op[5])
+                print("Time Read :",time_read)
+                plc_id = str(tupele_id_op[6])
+                print()
 
-                self.tab_history.setItem(i, j, QTableWidgetItem(str(value)))
-                self.tab_history.setItem(i, j+1, QTableWidgetItem(str(tupele_id_op[5])))
-                self.tab_history.setItem(i, j + 2, QTableWidgetItem(str(tupele_id_op[6])))
+                self.tab_history.setItem(i, j, QTableWidgetItem(str(round(value, 1))))
+
+            self.tab_history.setItem(i, len(list_by_id_operation), QTableWidgetItem(time_read))
+            self.tab_history.setItem(i, len(list_by_id_operation) + 1, QTableWidgetItem(plc_id))
 
 
 

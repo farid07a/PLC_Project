@@ -82,33 +82,38 @@ class history(QWidget):
         list_operation_in_tag_input = InputData().get_list_operation_tag_input_table()
         print("list operation id ",list_operation_in_tag_input)
         size_op_in_tag_input = len(list_operation_in_tag_input)
-        print("size of list operation ", list_operation_in_tag_input)
+        print("size of list operation ", len(list_operation_in_tag_input))
+
         for i in range(0, size_op_in_tag_input):
             id_op_var = list_operation_in_tag_input[i]
-            print("id_op_var :",id_op_var)
+            print("id_op_var :", id_op_var[0])
             list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized(id_op_var[0])
+            print("Number Of tags in operation :", len(list_by_id_operation))
+
             print("list tags in operation N°:",id_op_var[0])
             number_tag = len(list_by_id_operation)
-            print("Number Of tags in operation ",i)
-            for j in range(0, number_tag):
-                self.tab_history.insertRow(i)
-                id_op = list_by_id_operation[0]
-                name_tag = list_by_id_operation[1]
-                data_type = list_by_id_operation[2]
+            print("Number Of tags in operation :", i)
+            self.tab_history.insertRow(i)
+            for j in range(0, len(list_by_id_operation)):
+                print("--  iteration  --", j)
+                tupele_id_op = list_by_id_operation[j]
+                id_op=tupele_id_op[0]
+                name_tag = tupele_id_op[1]
+                data_type = tupele_id_op[2]
                 value = 0
                 if data_type == "int":
-                    value = get_int(list_by_id_operation[4], 0)
+                    value = get_int(tupele_id_op[4], 0)
                 elif data_type == "real":
-                    value = snap7.util.get_real(list_by_id_operation[4], 0)
+                    value = snap7.util.get_real(tupele_id_op[4], 0)
                 elif data_type == "bool":
-                    ad_bit = list_by_id_operation[3]
-                    value = snap7.util.get_bool(list_by_id_operation[4], 0, ad_bit)
+                    ad_bit = tupele_id_op[3]
+                    value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
 
                 print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
 
                 self.tab_history.setItem(i, j, QTableWidgetItem(str(value)))
-
-
+                self.tab_history.setItem(i, j+1, QTableWidgetItem(str(tupele_id_op[5])))
+                self.tab_history.setItem(i, j + 2, QTableWidgetItem(str(tupele_id_op[6])))
 
 
 

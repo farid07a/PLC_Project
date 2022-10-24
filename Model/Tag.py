@@ -5,6 +5,8 @@ from snap7.util import get_int, get_real
 from Model.ConnectionMysqlDB import ConnectionMysqlDB
 import mysql.connector
 
+from Model.ReadData import InputData
+
 
 class tag:
     ID_Tag = 0
@@ -222,12 +224,14 @@ class tag:
                 " WHERE plc_controller.ID_PLC = tag.ID_PLC " \
                 " AND tag.ID_Tag = tag_input.ID_Tag " \
                 " AND input_table.ID_Input = tag_input.ID_Input " \
-                " AND input_table.ID_Input=" ,id_op , " "
+                " AND input_table.ID_Input = %s "
+
         list_res = []
+
         try:
             self.connection_mysql.connecting()
             cursor = self.connection_mysql.get_connection().cursor()
-            cursor.execute(query)
+            cursor.execute(query,(id_op,))
             list_res = cursor.fetchall()
             for row in list_res:
 
@@ -277,7 +281,7 @@ class tag:
         return list_address_byte_and_bit
 
 
-# tag_insta = tag()
-# #
+tag_insta = tag()
+print(tag_insta.get_all_tags_and_time_optimized(1))
 # tag_insta.get_all_tags_and_time_optimized(1)
 # print(tag_insta.list_names_of_tags())

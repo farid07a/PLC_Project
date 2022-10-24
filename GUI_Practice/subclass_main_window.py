@@ -4,7 +4,6 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, \
     QTableWidgetItem, QLabel, QLineEdit
 from snap7 import client
-
 from GUI_Practice.WindwNewTag import WindowNewTag
 from GUI_Practice.form_history import history
 from Model.PLC import plcMachine

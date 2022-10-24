@@ -12,6 +12,7 @@ import sys
 
 from snap7.util import get_int
 
+from Model.ReadData import InputData
 from Model.Tag import tag
 
 class history(QWidget):
@@ -31,8 +32,7 @@ class history(QWidget):
         header.append("plc")
 
         self.tab_history.setHorizontalHeaderLabels(header)
-
-        self.display_history()
+        self.display_history_opti()
 
 
     def display_history(self): # Not Complete
@@ -77,14 +77,47 @@ class history(QWidget):
                 id_total_result += 1
                 i+=1
 
+    def display_history_opti(self):
+        print("")
+        list_operation_in_tag_input = InputData().get_list_operation_tag_input_table()
+        print("list operation id ",list_operation_in_tag_input)
+        size_op_in_tag_input = len(list_operation_in_tag_input)
+        print("size of list operation ", list_operation_in_tag_input)
+        for i in range(0, size_op_in_tag_input):
+            id_op_var = list_operation_in_tag_input[i]
+            print("id_op_var :",id_op_var)
+            list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized(id_op_var[0])
+            print("list tags in operation N°:",id_op_var[0])
+            number_tag = len(list_by_id_operation)
+            print("Number Of tags in operation ",i)
+            for j in range(0, number_tag):
+                self.tab_history.insertRow(i)
+                id_op = list_by_id_operation[0]
+                name_tag = list_by_id_operation[1]
+                data_type = list_by_id_operation[2]
+                value = 0
+                if data_type == "int":
+                    value = get_int(list_by_id_operation[4], 0)
+                elif data_type == "real":
+                    value = snap7.util.get_real(list_by_id_operation[4], 0)
+                elif data_type == "bool":
+                    ad_bit = list_by_id_operation[3]
+                    value = snap7.util.get_bool(list_by_id_operation[4], 0, ad_bit)
 
-        def display_history_opti():
-            print("")
+                print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
 
-# app=QApplication(sys.argv)
-# hist_frm=history()
-# hist_frm.show()
-# app.exec_()
+                self.tab_history.setItem(i, j, QTableWidgetItem(str(value)))
+
+
+
+
+
+
+
+app=QApplication(sys.argv)
+hist_frm=history()
+hist_frm.show()
+app.exec_()
 
 
 

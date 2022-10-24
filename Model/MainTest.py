@@ -41,7 +41,7 @@ set_real(db,2,55.5)
 set_bool(db,6,0,1)
 set_bool(db,6,1,0)
 set_real(db,7,12.51)
-set_bool(db,11,0,1)
+
 
 print("db array :", db)
 

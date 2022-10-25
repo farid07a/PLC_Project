@@ -126,6 +126,8 @@ class WindowNewTag(QWidget):
         elif self.ad_st_bit.isEnabled():
             self.ad_st_bit.setEnabled(False)
 
+
+
 # app = QApplication(sys.argv)
 # print("pass app")
 # WindowNewPLC_obj = WindowNewTag()

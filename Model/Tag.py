@@ -248,7 +248,6 @@ class tag:
                     value = snap7.util.get_bool(row[4], 0, ad_bit)
                 print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
 
-
         except mysql.connector.Error as error:
             print(error)
         finally:
@@ -275,13 +274,18 @@ class tag:
             elif tag.get_data_type() == "bool":
                 memory_cases_occupeid_byte.append(start_adres_byte)
                 start_address_bit = tag.get_address_start_bit()
-                memory_cases_occupeid_bit.append(start_adres_byte + "_" + start_address_bit)
+                memory_cases_occupeid_bit.append(str(start_adres_byte) + "_" + str(start_address_bit))
                 print("--------------------")
         list_address_byte_and_bit = [memory_cases_occupeid_byte, memory_cases_occupeid_bit]
         return list_address_byte_and_bit
 
 
+
 tag_insta = tag()
-print(tag_insta.get_all_tags_and_time_optimized(1))
+list_byte_Occupied = tag_insta.get_occupied_memory_cases()
+print(list_byte_Occupied[0])
+print(list_byte_Occupied[1])
+
+#print(tag_insta.get_all_tags_and_time_optimized(1))
 # tag_insta.get_all_tags_and_time_optimized(1)
 # print(tag_insta.list_names_of_tags())

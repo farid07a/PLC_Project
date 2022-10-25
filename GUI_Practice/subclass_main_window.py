@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.history_window=None
         self.setWindowTitle("OOP GUI")
         #self.resize(600,600)
-        self.setFixedSize(QSize(1000,600)) # resizable not working
+        self.setFixedSize(QSize(1000, 600)) # resizable not working
         qtRectangle = self.frameGeometry()
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)

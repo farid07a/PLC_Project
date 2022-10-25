@@ -74,7 +74,25 @@ class InputData:
                 self.connection_mysql.disconnect()
         return list_id
 
+    def get_list_operation_input_between_two_dates(self,dt1,dt2):
+        query = "SELECT DISTINCT ID_Input FROM input_table  " \
+                "WHERE  input_table.Time_Input >= %s  AND input_table.Time_Input <= %s "
 
+        list_id = []
+        cursor = None
+        try:
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor()
+            cursor.execute(query, (dt1, dt2))
+            list_id = cursor.fetchall()
+
+        except mysql.connector.Error as error:
+            print(error)
+        finally:
+            if self.connection_mysql.get_connection().is_connected():
+                cursor.close()
+                self.connection_mysql.disconnect()
+        return list_id
 
 # db = bytearray(20)
 #

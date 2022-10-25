@@ -40,24 +40,25 @@ class history(QWidget):
         header = self.tab_history.horizontalHeader()
         header.setSectionResizeMode(5, QHeaderView.Stretch)
 
-        btn_export=QPushButton ("Export Data",self)
-        btn_export.setGeometry (10,400,100,35)
+        self.btn_export=QPushButton ("Export Data",self)
+        self.btn_export.setGeometry (10,400,100,35)
 
-        lab_d1=QLabel("First Date",self)
-        lab_d1.setGeometry(350, 400, 120, 35)
-        calendar_start = QDateTimeEdit(self)
-        calendar_start.setGeometry (350,400,120,35)
+        self.lab_d1=QLabel("First Date",self)
+        self.lab_d1.setGeometry(350, 400, 120, 35)
 
-        calendar_end = QDateTimeEdit(self)
-        calendar_end.setGeometry(500, 400, 120, 35)
-        calendar_end.setDateTime(datetime.datetime.now())
+        self.calendar_start = QDateTimeEdit(self)
+        self.calendar_start.setGeometry (350,400,120,35)
+        self.calendar_start.setCalendarPopup(True)
 
-        btn_display = QPushButton("Display", self)
-        btn_display.setGeometry(650, 400, 100, 35)
+        self.calendar_end = QDateTimeEdit(self)
+        self.calendar_end.setGeometry(500, 400, 120, 35)
+        self.calendar_end.setDateTime(datetime.datetime.now())
 
-
+        self.btn_display = QPushButton("Display", self)
+        self.btn_display.setGeometry(650, 400, 100, 35)
         self.display_history_opti()
 
+        self.btn_display.clicked.connect(self.display_history_two_date)
 
     def display_history(self): # Not Complete
         list_result=self.tag_obj.get_all_tags_and_time() # list object of tags
@@ -102,7 +103,7 @@ class history(QWidget):
                 i+=1
 
     def display_history_opti(self):
-        print("")
+        self.tab_history.setRowCount(0)
         list_operation_in_tag_input = InputData().get_list_operation_tag_input_table()
         print("list operation id ",list_operation_in_tag_input)
         size_op_in_tag_input = len(list_operation_in_tag_input)
@@ -134,7 +135,60 @@ class history(QWidget):
                 elif data_type == "bool":
                     ad_bit = tupele_id_op[3]
                     value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
+                print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
+                time_read = str(tupele_id_op[5])
+                print("Time Read :",time_read)
+                plc_id = str(tupele_id_op[6])
+                print()
 
+                self.tab_history.setItem(i, j, QTableWidgetItem(str(round(value, 1))))
+
+            self.tab_history.setItem(i, len(list_by_id_operation), QTableWidgetItem(time_read))
+            self.tab_history.setItem(i, len(list_by_id_operation) + 1, QTableWidgetItem(plc_id))
+
+
+    def display_history_two_date(self):
+        self.tab_history.setRowCount(0)
+        d1 = self.calendar_start.dateTime()
+        d2 = self.calendar_end.dateTime()
+
+        print(str(d1.toPyDateTime()))
+        print(str(d2.time()))
+        list_operation_in_tag_input = InputData().get_list_operation_input_between_two_dates\
+            (str(d1.toPyDateTime()),str(d2.toPyDateTime()))
+        #list_operation_in_tag_input = InputData().get_list_operation_input_between_two_dates(
+         #                               "2022-10-20 12:31:35", "2022-10-24 13:05:22")
+        # "2022-10-20 12:31:35", "2022-10-24 13:05:22"
+        print("list operation id ",list_operation_in_tag_input)
+        size_op_in_tag_input = len(list_operation_in_tag_input)
+        print("size of list operation ", len(list_operation_in_tag_input))
+
+        for i in range(0, size_op_in_tag_input):
+            id_op_var = list_operation_in_tag_input[i]
+            print("id_op_var :", id_op_var[0])
+            list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized(id_op_var[0])
+            print("Number Of tags in operation :", len(list_by_id_operation))
+
+            print("list tags in operation N°:",id_op_var[0])
+            number_tag = len(list_by_id_operation)
+            print("Number Of tags in operation :", i)
+            self.tab_history.insertRow(i)
+            time_read=""
+            plc_id=""
+            for j in range(0, len(list_by_id_operation)):
+                print("--  iteration  --", j)
+                tupele_id_op = list_by_id_operation[j]
+                id_op=tupele_id_op[0]
+                name_tag = tupele_id_op[1]
+                data_type = tupele_id_op[2]
+                value = 0
+                if data_type == "int":
+                    value = get_int(tupele_id_op[4], 0)
+                elif data_type == "real":
+                    value = snap7.util.get_real(tupele_id_op[4], 0)
+                elif data_type == "bool":
+                    ad_bit = tupele_id_op[3]
+                    value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
                 print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
                 time_read = str(tupele_id_op[5])
                 print("Time Read :",time_read)
@@ -148,12 +202,10 @@ class history(QWidget):
 
 
 
-
-
-app=QApplication(sys.argv)
-hist_frm=history()
-hist_frm.show()
-app.exec_()
+# app=QApplication(sys.argv)
+# hist_frm=history()
+# hist_frm.show()
+# app.exec_()
 
 
 

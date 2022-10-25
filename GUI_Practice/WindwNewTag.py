@@ -1,5 +1,6 @@
 import sys
 
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, QLabel, \
     QLineEdit, QComboBox, QTableWidgetItem
 
@@ -49,7 +50,7 @@ class WindowNewTag(QWidget):
         self.ad_st_byte = QLineEdit(self)
         self.ad_st_byte.setPlaceholderText("Input start address byte")
         self.ad_st_byte.setGeometry(125, 150, 150, 35)
-
+        self.ad_st_byte.textChanged.connect(self.control_address_)
         lab_ad_bit = QLabel("Address start bit:", self)
         lab_ad_bit.setGeometry(20, 200, 100, 35)
 
@@ -64,6 +65,10 @@ class WindowNewTag(QWidget):
 
         self.btn_cancel = QPushButton('Cancel', self)
         self.btn_cancel.setGeometry(90, 300, 80, 35)
+
+        self.msg_to_user = QLabel("", self)
+        self.msg_to_user.setGeometry(10, 360, 200, 35)
+        self.msg_to_user.setStyleSheet('color:red')
 
         self.tab_tags = QTableWidget(self)
         self.tab_tags.resize(500, 200)
@@ -126,6 +131,38 @@ class WindowNewTag(QWidget):
         elif self.ad_st_bit.isEnabled():
             self.ad_st_bit.setEnabled(False)
 
+    def control_address_(self):
+
+        address_by_user=self.ad_st_byte.text()
+
+        if address_by_user != "":
+            print(" text :",address_by_user)
+            list_address= self.tag_obj.get_occupied_memory_cases()
+
+            list_byte_occupied = list_address[0]
+            print(list_byte_occupied)
+
+            address_by_user = int(address_by_user)
+
+            print(address_by_user)
+            if address_by_user in list_byte_occupied:
+                print("Address is Reserved")
+                self.btn_save.setEnabled(False)
+                tag_name = self.tag_obj.get_tag_name_by_address(address_by_user)
+                print("name of tag :: ", tag_name)
+                self.msg_to_user.setStyleSheet('color: red')
+                print("passed color")
+                if tag_name !="":
+                    self.msg_to_user.setText("this Address is reserved for :"+ tag_name)
+                else:
+                    self.msg_to_user.setText("This Address is free ")
+                    self.msg_to_user.setStyleSheet('color: green')
+                #self.msg_to_user.setFont(QFont('Arial', 13))
+
+        else:
+            print("No text")
+            self.btn_save.setEnabled(True)
+            self.msg_to_user.setText("")
 
 
 # app = QApplication(sys.argv)
@@ -134,3 +171,5 @@ class WindowNewTag(QWidget):
 # WindowNewPLC_obj.show()
 #
 # app.exec_()
+
+#

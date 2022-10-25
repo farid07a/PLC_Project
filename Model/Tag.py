@@ -260,32 +260,79 @@ class tag:
         list_tags = self.list_of_tags()
         memory_cases_occupeid_byte = []
         memory_cases_occupeid_bit = []
-        for tag in list_tags:
-            start_adres_byte = tag.get_address_start_byte()
-            if tag.get_data_type() == "int":
+        for tag_row in list_tags:
+            start_adres_byte = tag_row.get_address_start_byte()
+
+            if tag_row.get_data_type() == "int":
                 memory_cases_occupeid_byte.append(start_adres_byte)
                 memory_cases_occupeid_byte.append(start_adres_byte + 1)
 
-            elif tag.get_data_type() == "real":
+            elif tag_row.get_data_type() == "real":
                 memory_cases_occupeid_byte.append(start_adres_byte)
-                for ad in range(start_adres_byte, start_adres_byte + 4):
+                for ad in range(start_adres_byte+1, start_adres_byte + 4):
                     print(ad)
                     memory_cases_occupeid_byte.append(ad)
-            elif tag.get_data_type() == "bool":
+            elif tag_row.get_data_type() == "bool":
                 memory_cases_occupeid_byte.append(start_adres_byte)
-                start_address_bit = tag.get_address_start_bit()
+                start_address_bit = tag_row.get_address_start_bit()
                 memory_cases_occupeid_bit.append(str(start_adres_byte) + "_" + str(start_address_bit))
                 print("--------------------")
         list_address_byte_and_bit = [memory_cases_occupeid_byte, memory_cases_occupeid_bit]
         return list_address_byte_and_bit
 
+    def get_tag_name_by_address(self,input_address_byte):
+
+        address_tag_db = -1
+        name_tag = ""
+        list_tags = self.list_of_tags()
+
+        for tag_row in list_tags:
+            print("----iteration-------")
+            start_adres_byte = tag_row.get_address_start_byte()
+            print(start_adres_byte)
+            if input_address_byte==start_adres_byte:
+
+                print("Address same input")
+                address_tag_db = start_adres_byte
+                break
+
+            elif tag_row.get_data_type()== "int" and input_address_byte == start_adres_byte+1:
+                print("address not in static address")
+                address_tag_db = start_adres_byte
+                break
+            elif tag_row.get_data_type() == "real" and start_adres_byte < input_address_byte < start_adres_byte + 4:
+                address_tag_db = start_adres_byte
+                break
+
+        if address_tag_db != -1:
+            query="SELECT Name FROM tag WHERE Address_start_byte = %s"
+            cursor=None
+            try:
+                self.connection_mysql.connecting()
+                cursor = self.connection_mysql.get_connection().cursor()
+                cursor.execute(query, (address_tag_db,))
+                tuple_name = cursor.fetchall()
+                name_tag = tuple_name[0]
+                name_tag = name_tag[0]
+            except mysql.connector.Error as error:
+                print(error)
+            finally:
+                if self.connection_mysql.get_connection().is_connected():
+                    self.connection_mysql.disconnect()
+                    cursor.close()
+
+        return name_tag
 
 
-tag_insta = tag()
-list_byte_Occupied = tag_insta.get_occupied_memory_cases()
-print(list_byte_Occupied[0])
-print(list_byte_Occupied[1])
-
+# tag_insta = tag()
+# # print(tag_insta.get_tag_name_by_address(8))
+#
+# list_byte_Occupied = tag_insta.get_occupied_memory_cases()
+# print(list_byte_Occupied[0])
+# print(list_byte_Occupied[1])
+#
+#
+#tag_insta.get_all_tags_between_dates("2022-10-20 12:31:35", "2022-10-24 13:05:22")
 #print(tag_insta.get_all_tags_and_time_optimized(1))
 # tag_insta.get_all_tags_and_time_optimized(1)
 # print(tag_insta.list_names_of_tags())

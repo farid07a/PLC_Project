@@ -1,7 +1,7 @@
-
+import snap7
 from snap7 import client
 import mysql.connector
-
+from snap7.util import get_int
 
 from Model.ConnectionMysqlDB import ConnectionMysqlDB
 #from data_type import DataType
@@ -71,24 +71,6 @@ class plcMachine:
 
     def getRACK(self):
         return self.RACK
-
-    # Insert New PLC in DataBase
-    # def add_new_plc(self):
-    #     Query = "INSERT INTO plc_controller (Model,IP,RACK,	SLOT) values (%s,%s,%s,%s)"
-    #     try:
-    #         self.connection_mysql.connecting()
-    #         cursor = self.connection_mysql.get_connection().cursor()
-    #         val = (self.ModelPlc, self.IP, self.RACK, self.SLOT)
-    #         cursor.execute(Query, val)
-    #         print("Success Insert Record")
-    #         self.self.connection_mysql.get_connection().commit()
-    #     except mysql.connector.Error as error:
-    #         print("Failed to insert into MySQL table {}".format(error))
-    #     finally:
-    #         if self.connection_mysql.get_connection().is_connected():
-    #             cursor.close()
-    #             self.connection_mysql.get_connection().close()
-    #             print("MySQL connection is closed")
 
     def Input_plc_informations(self):
         # self.connecting_physique_plc()
@@ -176,6 +158,7 @@ class plcMachine:
         print(cursor.rowcount, 'record(s) deleted')
         cursor.close()
         connection.close()
+
 
     def menu(self):
         flag = True

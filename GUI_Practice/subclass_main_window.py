@@ -28,12 +28,14 @@ class MainWindow(QMainWindow):
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
-        self.menu_bar=QMenuBar(self)
+        self.menu_bar = QMenuBar(self)
 
         self.new_menu = QMenu('new')
         self.connect_menu = QMenu('connect')
         self.menu_bar.addMenu(self.new_menu)
         self.menu_bar.addMenu(self.connect_menu)
+
+
         btn_plc = QPushButton('Connect PLC', self)
         btn_plc.move(50, 50)
 

@@ -12,7 +12,6 @@ RACK = 0
 SLOT = 1
 
 
-
 tag = tag()
 # plc_obj = plcMachine()
 read_data_obj = InputData()

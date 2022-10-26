@@ -2,7 +2,7 @@ import sys
 
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, \
-    QTableWidgetItem, QLabel, QLineEdit
+    QTableWidgetItem, QLabel, QLineEdit, QMenuBar, QMenu
 from snap7 import client
 from GUI_Practice.WindwNewTag import WindowNewTag
 from GUI_Practice.form_history import history
@@ -28,7 +28,12 @@ class MainWindow(QMainWindow):
         centerPoint = QDesktopWidget().availableGeometry().center()
         qtRectangle.moveCenter(centerPoint)
         self.move(qtRectangle.topLeft())
+        self.menu_bar=QMenuBar(self)
 
+        self.new_menu = QMenu('new')
+        self.connect_menu = QMenu('connect')
+        self.menu_bar.addMenu(self.new_menu)
+        self.menu_bar.addMenu(self.connect_menu)
         btn_plc = QPushButton('Connect PLC', self)
         btn_plc.move(50, 50)
 
@@ -77,7 +82,7 @@ class MainWindow(QMainWindow):
         self.load_plcs()
 
     def show_tag_window(self):
-        self.tag_window= WindowNewTag()
+        self.tag_window = WindowNewTag()
         self.tag_window.show()
 
     def load_plcs(self):
@@ -94,16 +99,15 @@ class MainWindow(QMainWindow):
             self.tab_plcs.setItem(i, 2, QTableWidgetItem(str(plc_info[2])))
             self.tab_plcs.setItem(i, 3, QTableWidgetItem(str(plc_info[3])))
 
+
     def show_history_window(self):
         self.history_window=history()
         self.history_window.show()
+
     def save_plc(self):
-
         rack = int(self.txt_lin_rack.text())
-
-        slot=int(self.txt_lin_slot.text())
-
-        self.plc_object=plcMachine(0,self.txt_lin_ip.text(),rack,slot)
+        slot = int(self.txt_lin_slot.text())
+        self.plc_object = plcMachine(0, self.txt_lin_ip.text(), rack, slot)
         self.plc_object.insert_new_plc()
         self.load_plcs()
 

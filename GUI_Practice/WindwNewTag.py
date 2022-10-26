@@ -101,6 +101,7 @@ class WindowNewTag(QWidget):
             self.tab_tags.setItem(i, 0, QTableWidgetItem(str(list_tags[i].get_id_tag())))
             self.tab_tags.setItem(i, 1, QTableWidgetItem(str(list_tags[i].get_name_tag())))
             self.tab_tags.setItem(i, 2, QTableWidgetItem(str(list_tags[i].get_data_type())))
+
             address_bit = 0 if list_tags[i].get_address_start_byte() != "bool" else list_tags[i].get_address_start_bit()
             self.tab_tags.setItem(i, 3,
                                   QTableWidgetItem(str(list_tags[i].get_address_start_byte()) + "." + str(address_bit)))
@@ -133,18 +134,19 @@ class WindowNewTag(QWidget):
 
     def control_address_(self):
 
-        address_by_user=self.ad_st_byte.text()
+        address_by_user = self.ad_st_byte.text()
+
+        print("Input Address by user :",address_by_user)
 
         if address_by_user != "":
-            print(" text :",address_by_user)
-            list_address= self.tag_obj.get_occupied_memory_cases()
 
+            print("Input text not empty")
+            list_address = self.tag_obj.get_occupied_memory_cases()
             list_byte_occupied = list_address[0]
-            print(list_byte_occupied)
-
+            print("list address reserved:", list_byte_occupied)
             address_by_user = int(address_by_user)
+            print("Address to int :",address_by_user)
 
-            print(address_by_user)
             if address_by_user in list_byte_occupied:
                 print("Address is Reserved")
                 self.btn_save.setEnabled(False)
@@ -154,22 +156,22 @@ class WindowNewTag(QWidget):
                 print("passed color")
                 if tag_name !="":
                     self.msg_to_user.setText("this Address is reserved for :"+ tag_name)
-                else:
-                    self.msg_to_user.setText("This Address is free ")
-                    self.msg_to_user.setStyleSheet('color: green')
+            else:
+                self.msg_to_user.setText("This Address is free ")
+                self.msg_to_user.setStyleSheet('color: green')
                 #self.msg_to_user.setFont(QFont('Arial', 13))
 
         else:
-            print("No text")
+            print("Empty input text ")
             self.btn_save.setEnabled(True)
-            self.msg_to_user.setText("")
+            self.msg_to_user.setText("No input address ")
 
 
-# app = QApplication(sys.argv)
-# print("pass app")
-# WindowNewPLC_obj = WindowNewTag()
-# WindowNewPLC_obj.show()
+app = QApplication(sys.argv)
+print("pass app")
+WindowNewPLC_obj = WindowNewTag()
+WindowNewPLC_obj.show()
 #
-# app.exec_()
+app.exec_()
 
 #

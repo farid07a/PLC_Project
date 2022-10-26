@@ -18,11 +18,10 @@ class plcMachine:
     SLOT = 0
     # Status = True
     ModelPlc = "S7 1200"
-
     clientPlc = client.Client()
     tag = tag()
+    Connection_status_plc = False
 
-    ConnectionObj = False
     # var_connection = mysql.connector.connect()
     connection_mysql = ConnectionMysqlDB()
 
@@ -38,18 +37,9 @@ class plcMachine:
         try:
             if not self.clientPlc.get_connected():
                 self.clientPlc.connect(self.IP, self.RACK, self.SLOT)
-                self.ConnectionObj = True
+                self.Connection_status_plc = True
         except Exception as e:
             print(e)
-
-    # Antagonistic Connection PLC
-    def connecting_To_PLC_Recursion(self):
-        try:
-            if self.ConnectionObj == False:
-                self.clientPlc.connect(self.IP, self.RACK, self.SLOT)
-                self.ConnectionObj = True
-        except Exception as e:
-            print("Occurred Exception")
 
     # Setter & Getter Functions
     def get_client_plc(self):

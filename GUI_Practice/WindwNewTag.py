@@ -167,11 +167,11 @@ class WindowNewTag(QWidget):
             self.msg_to_user.setText("No input address ")
 
 
-app = QApplication(sys.argv)
-print("pass app")
-WindowNewPLC_obj = WindowNewTag()
-WindowNewPLC_obj.show()
-#
-app.exec_()
+# app = QApplication(sys.argv)
+# print("pass app")
+# WindowNewPLC_obj = WindowNewTag()
+# WindowNewPLC_obj.show()
+# #
+# app.exec_()
 
 #

@@ -135,8 +135,40 @@ class tag:
             if self.connection_mysql.get_connection().is_connected():
                 self.connection_mysql.get_connection().close()
                 cursor.close()
-
         return list_tag
+
+    # get list tags by id_plc
+    def get_data_tags_in_database_by_id_plc(self, id_plc):
+        query = "select * from  tag WHERE tag.ID_PLC =%s"
+        cursor = None
+        list_tag = []
+        try:
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor()
+            cursor.execute(query, (id_plc,))
+            list_tag = cursor.fetchall()
+            for tag_row in list_tag:
+                print(tag_row)
+
+        except mysql.connector.Error as error:
+            print(error)
+        finally:
+            if self.connection_mysql.get_connection().is_connected():
+                self.connection_mysql.get_connection().close()
+                cursor.close()
+        return list_tag
+
+    def list_of_tags_by_id_plc(self, id_plc):  # list of tag object
+
+        data_from_database = self.get_data_tags_in_database_by_id_plc(id_plc)
+        list_obj_tags = []
+        for row in data_from_database:
+            # tag_obj = tag()
+            tag_obj = tag()
+            tag_obj.create_object(row[0], row[1], row[2], row[3], row[4], row[5])
+            list_obj_tags.append(tag_obj)
+            print(list_obj_tags[0])
+        return list_obj_tags
 
     def list_of_tags(self):  # list of tag object
         data_from_database = self.get_data_tags_in_database()
@@ -149,7 +181,7 @@ class tag:
         return list_obj_tags
 
     def list_names_of_tags(self):
-        list_names=[]
+        list_names = []
         list_objc_tags = self.list_of_tags()
         for tag_name in list_objc_tags:
             list_names.append(tag_name.get_name_tag())
@@ -213,28 +245,32 @@ class tag:
                 self.connection_mysql.disconnect()
         return list_res
 
-
-    def get_all_tags_and_time_optimized(self, id_op): # optimize
+    def get_all_tags_and_time_optimized(self, id_op):  # optimize
         cursor = None
-        query = "SELECT input_table.ID_Input," \
+        query = " SELECT input_table.ID_Input," \
                 " tag.Name, tag.Data_Type, tag.Address_start_bit," \
-                "tag_input.Value_Tag," \
+                " tag_input.Value_Tag," \
                 " input_table.Time_Input, plc_controller.ID_PLC " \
-                "FROM tag_input, tag, input_table, plc_controller " \
+                " FROM tag_input, tag, input_table, plc_controller " \
                 " WHERE plc_controller.ID_PLC = tag.ID_PLC " \
                 " AND tag.ID_Tag = tag_input.ID_Tag " \
                 " AND input_table.ID_Input = tag_input.ID_Input " \
                 " AND input_table.ID_Input = %s "
 
-        list_res = []
+        query1 = "SELECT * FROM plc_controller p " \
+                 "JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+                 "JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+                 "JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+                 "WHERE i.ID_Input= %s "
 
+        list_res = []
         try:
             self.connection_mysql.connecting()
             cursor = self.connection_mysql.get_connection().cursor()
-            cursor.execute(query,(id_op,))
+            cursor.execute(query, (id_op,))
             list_res = cursor.fetchall()
-            for row in list_res:
 
+            for row in list_res:
                 id_op = row[0]
                 name_tag = row[1]
                 data_type = row[2]
@@ -246,7 +282,51 @@ class tag:
                 elif data_type == "bool":
                     ad_bit = row[3]
                     value = snap7.util.get_bool(row[4], 0, ad_bit)
+
                 print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value)
+
+        except mysql.connector.Error as error:
+            print(error)
+        finally:
+            if self.connection_mysql.get_connection().is_connected():
+                cursor.close()
+                self.connection_mysql.disconnect()
+        return list_res
+
+    def get_all_tags_and_time_optimized_query_update(self, id_op):  # optimize
+        cursor = None
+        query1 = "SELECT * FROM plc_controller p " \
+                 "JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+                 "JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+                 "JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+                 "WHERE i.ID_Input= %s "
+
+        list_res = []
+        try:
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor(dictionary=True)
+            cursor.execute(query1, (id_op,))
+            result = cursor.fetchall()
+
+            for row in result:
+                id_op = row["ID_Input"]
+                name_tag = row["Name"]
+                data_type = row["Data_Type"]
+                value = 0
+                ad_bit = -1
+                if data_type == "int":
+                    value = get_int(row["Value_Tag"], 0)
+                elif data_type == "real":
+                    value = snap7.util.get_real(row["Value_Tag"], 0)
+                elif data_type == "bool":
+                    ad_bit = row["Address_start_bit"]
+                    value = snap7.util.get_bool(row["Value_Tag"], 0, ad_bit)
+
+                tup = (id_op, name_tag, data_type, ad_bit, value, row["Time_Input"], row["ID_PLC"])
+                print("ID_op:", id_op, " Name:", name_tag, "data_type:", data_type, " value:", value," time:",row["Time_Input"]," ID_PLC:",row["ID_PLC"])
+
+                print("tuple data:", tup)
+                list_res.append(tup)
 
         except mysql.connector.Error as error:
             print(error)
@@ -269,7 +349,7 @@ class tag:
 
             elif tag_row.get_data_type() == "real":
                 memory_cases_occupeid_byte.append(start_adres_byte)
-                for ad in range(start_adres_byte+1, start_adres_byte + 4):
+                for ad in range(start_adres_byte + 1, start_adres_byte + 4):
                     print(ad)
                     memory_cases_occupeid_byte.append(ad)
             elif tag_row.get_data_type() == "bool":
@@ -280,7 +360,7 @@ class tag:
         list_address_byte_and_bit = [memory_cases_occupeid_byte, memory_cases_occupeid_bit]
         return list_address_byte_and_bit
 
-    def get_tag_name_by_address(self,input_address_byte):
+    def get_tag_name_by_address(self, input_address_byte):
 
         address_tag_db = -1
         name_tag = ""
@@ -290,13 +370,13 @@ class tag:
             print("----iteration-------")
             start_adres_byte = tag_row.get_address_start_byte()
             print(start_adres_byte)
-            if input_address_byte==start_adres_byte:
+            if input_address_byte == start_adres_byte:
 
                 print("Address same input")
                 address_tag_db = start_adres_byte
                 break
 
-            elif tag_row.get_data_type()== "int" and input_address_byte == start_adres_byte+1:
+            elif tag_row.get_data_type() == "int" and input_address_byte == start_adres_byte + 1:
                 print("address not in static address")
                 address_tag_db = start_adres_byte
                 break
@@ -305,8 +385,8 @@ class tag:
                 break
 
         if address_tag_db != -1:
-            query="SELECT Name FROM tag WHERE Address_start_byte = %s"
-            cursor=None
+            query = "SELECT Name FROM tag WHERE Address_start_byte = %s"
+            cursor = None
             try:
                 self.connection_mysql.connecting()
                 cursor = self.connection_mysql.get_connection().cursor()
@@ -324,15 +404,24 @@ class tag:
         return name_tag
 
 
-# tag_insta = tag()
-# # print(tag_insta.get_tag_name_by_address(8))
+tag_insta = tag()
+listtags=tag_insta.get_all_tags_and_time_optimized_query_update(1)
+#
+# print("------------------")
+#
+# print(listtags)
+
+# print(tag_insta.list_of_tags())
+
 #
 # list_byte_Occupied = tag_insta.get_occupied_memory_cases()
 # print(list_byte_Occupied[0])
 # print(list_byte_Occupied[1])
 #
 #
-#tag_insta.get_all_tags_between_dates("2022-10-20 12:31:35", "2022-10-24 13:05:22")
-#print(tag_insta.get_all_tags_and_time_optimized(1))
-# tag_insta.get_all_tags_and_time_optimized(1)
+# tag_insta.get_all_tags_between_dates("2022-10-20 12:31:35", "2022-10-24 13:05:22")
+# print(tag_insta.get_all_tags_and_time_optimized(1))
+# list_tags = tag_insta.get_all_tags_and_time_optimized(1)
+# print(len(tag_insta.get_all_tags_and_time_optimized(1)))
+
 # print(tag_insta.list_names_of_tags())

@@ -57,8 +57,8 @@ class history(QWidget):
         self.btn_display = QPushButton("Display", self)
         self.btn_display.setGeometry(650, 400, 100, 35)
         self.display_history_opti()
-
         self.btn_display.clicked.connect(self.display_history_two_date)
+
 
     def display_history(self): # Not Complete
         list_result=self.tag_obj.get_all_tags_and_time() # list object of tags
@@ -112,7 +112,8 @@ class history(QWidget):
         for i in range(0, size_op_in_tag_input):
             id_op_var = list_operation_in_tag_input[i]
             print("id_op_var :", id_op_var[0])
-            list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized(id_op_var[0])
+            # list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized(id_op_var[0])
+            list_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized_query_update(id_op_var[0])
             print("Number Of tags in operation :", len(list_by_id_operation))
 
             print("list tags in operation N°:",id_op_var[0])

@@ -46,7 +46,8 @@ print("db array :", db)
 
 read_data_obj.Data_Input = db  # set dataBloc to DataInput to save with operation
 read_data_obj.insert_input_data() # save The operation read of data with primary key
-list_tags = tag.list_of_tags()      # get list of tags to get id and
+list_tags = tag.list_of_tags()      # get list of tags to get id
+
 
 for tag_i in list_tags:
 

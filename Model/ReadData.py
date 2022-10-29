@@ -54,10 +54,8 @@ class InputData:
                 self.connection_mysql.disconnect()
         return last_id
 
-
-    def get_list_operation_tag_input_table(self):
+    def get_list_operation_tag_input_table(self):   # get list all
         query = "SELECT DISTINCT ID_Input FROM tag_input"
-
         list_id = []
         cursor = None
         try:
@@ -75,6 +73,7 @@ class InputData:
         return list_id
 
     def get_list_operation_input_between_two_dates(self,dt1,dt2):
+
         query = "SELECT DISTINCT ID_Input FROM input_table  " \
                 "WHERE  input_table.Time_Input >= %s  AND input_table.Time_Input <= %s "
 

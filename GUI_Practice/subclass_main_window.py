@@ -70,8 +70,8 @@ class MainWindow(QMainWindow):
 
         self.btn_reading_data = QPushButton('Start Reading',self)
         self.btn_reading_data.move(160, 330)
-        self.btn_reading_data.clicked.connect(self.start_reading_data_without_while)
-
+        # self.btn_reading_data.clicked.connect(self.start_reading_data_without_while)
+        self.btn_reading_data.clicked.connect(self.start_reading_data)
 
         self.stop_reading_data = QPushButton('Stop reading', self)
         self.stop_reading_data.move(300, 330)
@@ -227,7 +227,6 @@ class MainWindow(QMainWindow):
 
                 print("-- itr -- operation", i+1, " tag N :", j+1)
 
-
                 tupele_id_op = list_tags_by_id_operation[j]
 
                 print(tupele_id_op[0], " - ", tupele_id_op[1], " - ", tupele_id_op[2], " - ", tupele_id_op[3], " - ",
@@ -243,7 +242,6 @@ class MainWindow(QMainWindow):
                 # elif data_type == "bool":
                 #     ad_bit = tupele_id_op[3]
                 #     value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
-
                 ad_bit = tupele_id_op[3]
                 value=tupele_id_op[4]
                 time_read = str(tupele_id_op[5])
@@ -273,7 +271,7 @@ class MainWindow(QMainWindow):
 
         while self.stat_read_data:
             try:
-                self.plc_physic.connect(self.plc_object.getIP(), self.plc_object.getRACK() ,self.plc_object.getSlot())
+                self.plc_physic.connect(self.plc_object.getIP(), self.plc_object.getRACK(), self.plc_object.getSlot())
             except:
                 print("pass connection physic plc ")
 
@@ -296,9 +294,9 @@ class MainWindow(QMainWindow):
             print("db array :", db)
 
             self.read_data_obj.Data_Input = db  # set dataBloc to DataInput to save with operation
+            print(self.read_data_obj.Data_Input)
             self.read_data_obj.insert_input_data()  # save The operation read of data with primary key
             list_tags = self.tag_obj.list_of_tags_by_id_plc(self.plc_object.getIdPlc())  # get list of tags to get id
-
             for tag_i in list_tags:
 
                 id_tag = tag_i.get_id_tag()
@@ -325,13 +323,11 @@ class MainWindow(QMainWindow):
 
                 id_read = self.read_data_obj.get_last_operation_read()  # return last id of Operation Read
                 print("Last ID of Operationread :", id_read)
-
                 self.split_data_tag.create(id_tag, id_read, part_of_tag)  #
-
                 self.split_data_tag.insert_split_data_package_database()  # insert data in database
-                self.display_history_with_update_query()
 
-            sleep(1)
+                self.display_history_with_update_query()
+            sleep(3)
 
     def start_reading_data_without_while(self):
         try:

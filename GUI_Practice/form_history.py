@@ -56,7 +56,8 @@ class history(QWidget):
 
         self.btn_display = QPushButton("Display", self)
         self.btn_display.setGeometry(650, 400, 100, 35)
-        self.display_history_opti()
+        # self.display_history()
+        self.display_history_with_update_query()
         self.btn_display.clicked.connect(self.display_history_two_date)
 
 
@@ -202,11 +203,59 @@ class history(QWidget):
             self.tab_history.setItem(i, len(list_by_id_operation) + 1, QTableWidgetItem(plc_id))
 
 
+    def display_history_with_update_query(self):
+        self.tab_history.setRowCount(0)
+        list_operation_in_tag_input = InputData().get_list_operation_tag_input_table()  # get list of operations
 
-# app=QApplication(sys.argv)
-# hist_frm=history()
-# hist_frm.show()
-# app.exec_()
+        print("the operations operation ids= ", list_operation_in_tag_input)
+        size_op_in_tag_input = len(list_operation_in_tag_input)
+        print("size of list operation in table tag_input ", len(list_operation_in_tag_input))
+
+        for i in range(0, size_op_in_tag_input):
+            id_op_var = list_operation_in_tag_input[i] # array of tuple id operation
+            print("id_op :", id_op_var[0])
+            list_tags_by_id_operation = self.tag_obj.get_all_tags_and_time_optimized_query_update(id_op_var[0]) # retutn list
+            print("Nbr tags related by operation N ", id_op_var[0], " = ", len(list_tags_by_id_operation))
+            number_tag = len(list_tags_by_id_operation)
+            self.tab_history.insertRow(i)
+            time_read = ""
+            plc_id = ""
+            for j in range(0, len(list_tags_by_id_operation)):
+
+                print("-- itr -- operation", i+1, " tag N :", j+1)
+
+
+                tupele_id_op = list_tags_by_id_operation[j]
+
+                print(tupele_id_op[0], " - ", tupele_id_op[1], " - ", tupele_id_op[2], " - ", tupele_id_op[3], " - ",
+                      tupele_id_op[4], " - ", tupele_id_op[5], " - ", tupele_id_op[6])
+                id_op = tupele_id_op[0]
+                name_tag = tupele_id_op[1]
+                data_type = tupele_id_op[2]
+                # value = 0
+                # if data_type == "int":
+                #     value = get_int(tupele_id_op[4], 0)
+                # elif data_type == "real":
+                #     value = snap7.util.get_real(tupele_id_op[4], 0)
+                # elif data_type == "bool":
+                #     ad_bit = tupele_id_op[3]
+                #     value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
+
+                ad_bit = tupele_id_op[3]
+                value=tupele_id_op[4]
+                time_read = str(tupele_id_op[5])
+                # print("Time Read :",time_read)
+                plc_id = str(tupele_id_op[6])
+                print(tupele_id_op[0]," - ",tupele_id_op[1]," - ", tupele_id_op[2]," - ",tupele_id_op[3], " - ", tupele_id_op[4], " - ", tupele_id_op[5], " - ",tupele_id_op[6])
+                self.tab_history.setItem(i, j, QTableWidgetItem(str(round(value, 1))))
+
+            self.tab_history.setItem(i, len(list_tags_by_id_operation), QTableWidgetItem(time_read))
+            self.tab_history.setItem(i, len(list_tags_by_id_operation) + 1, QTableWidgetItem(plc_id))
+
+app=QApplication(sys.argv)
+hist_frm=history()
+hist_frm.show()
+app.exec_()
 
 
 

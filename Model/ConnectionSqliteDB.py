@@ -6,7 +6,7 @@ from mysql.connector import Error
 import sqlite3
 
 import pyodbc
-class ConnectionMysqlDB:
+class ConnectionSqliteDB:
 
     connection_db = sqlite3.connect('')
 
@@ -61,7 +61,7 @@ class ConnectionMysqlDB:
     def disconnect(self):
         self.connection_db.close()
 
-obj_cnx = ConnectionMysqlDB()
+obj_cnx = ConnectionSqliteDB()
 obj_cnx.connecting()
 obj_cnx.disconnect()
 

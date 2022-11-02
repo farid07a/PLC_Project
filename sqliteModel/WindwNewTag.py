@@ -2,8 +2,7 @@ import sys
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, QLabel, \
-    QLineEdit, QComboBox, QTableWidgetItem
-
+    QLineEdit, QComboBox, QTableWidgetItem, QMessageBox
 
 from sqliteModel.PLC import plcMachine
 from sqliteModel.Tag import tag
@@ -34,6 +33,7 @@ class WindowNewTag(QWidget):
         self.txt_lin_name_tag = QLineEdit(self)
         self.txt_lin_name_tag.setPlaceholderText("Input tag name")
         self.txt_lin_name_tag.setGeometry(125, 50, 150, 35)
+        self.txt_lin_name_tag.textChanged.connect(self.control_name_tag)
 
         lab_name_tag = QLabel("Data type tag:", self)
         lab_name_tag.setGeometry(20, 100, 100, 35)
@@ -59,7 +59,6 @@ class WindowNewTag(QWidget):
         self.ad_st_bit.setGeometry(125, 200, 150, 35)
         self.ad_st_bit.setEnabled(True) # because first item in combo data_type is bool
 
-
         self.btn_save = QPushButton('Save', self)
         self.btn_save.setGeometry(200, 300, 80, 35)
 
@@ -84,8 +83,7 @@ class WindowNewTag(QWidget):
 
         self.tag_obj = tag()
         self.load_plcs_combobox()
-        self.load_tags_in_table()
-
+        self.load_tags_in_table_by_id_plc(int(self.cmb_plcs.currentText()))
         self.cmb_datatype.currentIndexChanged.connect(self.change_select_item_data_type)
         self.cmb_plcs.currentIndexChanged.connect(self.change_select_item_plc)
         self.btn_save.clicked.connect(self.save_tag_in_database)
@@ -109,7 +107,6 @@ class WindowNewTag(QWidget):
             self.tab_tags.setItem(i, 3,
                                   QTableWidgetItem(str(list_tags[i].get_address_start_byte()) + "." + str(address_bit)))
 
-
     # load tags in table for one plc
     # arg : id_plc
     def load_tags_in_table_by_id_plc(self,id_plc):
@@ -131,18 +128,29 @@ class WindowNewTag(QWidget):
                                   QTableWidgetItem(str(list_tags[i].get_address_start_byte()) + "." + str(address_bit)))
 
     def save_tag_in_database(self):
+
         name = self.txt_lin_name_tag.text()
         data_type = self.cmb_datatype.currentText()
         addres_byte = self.ad_st_byte.text()
-        addres_bit = -1
-        if self.ad_st_bit.isEnabled():
-            addres_bit = self.ad_st_bit.text()
-        #  Name, Data_Type, Address_start_byte, Address_start_bit, ID_PLC
-        id_plc = self.cmb_plcs.currentText()
 
-        self.tag_obj.create_object(0, name, data_type, addres_byte, addres_bit, id_plc)
-        self.tag_obj.insert_tag_in_database()
-        self.load_tags_in_table()
+        if name == "" or addres_byte == "" or self.ad_st_bit.text() == "":
+            print("i am in empty field")
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setWindowTitle('Information')
+            msg_box.setText("please verify the tag information")
+            msg_box.exec()
+            return
+
+        else:
+            addres_bit = -1
+            if self.ad_st_bit.isEnabled():
+                addres_bit = self.ad_st_bit.text()
+            #  Name, Data_Type, Address_start_byte, Address_start_bit, ID_PLC
+            id_plc = self.cmb_plcs.currentText()
+            self.tag_obj.create_object(0, name, data_type, addres_byte, addres_bit, id_plc)
+            self.tag_obj.insert_tag_in_database()
+            self.load_tags_in_table_by_id_plc(self.tag_obj.get_id_plc())
 
     def load_plcs_combobox(self):
         tuple_plc = self.plc.get_list_plc()
@@ -162,24 +170,20 @@ class WindowNewTag(QWidget):
         self.load_tags_in_table_by_id_plc(id_plc)
 
     def control_address_(self):
-
         address_by_user = self.ad_st_byte.text()
-
         print("Input Address by user :",address_by_user)
-
         if address_by_user != "":
-
             print("Input text not empty")
-            list_address = self.tag_obj.get_occupied_memory_cases()
+            id_plc=(self.cmb_plcs.currentText())
+            list_address = self.tag_obj.get_occupied_memory_cases_by_id_plc(id_plc)
             list_byte_occupied = list_address[0]
             print("list address reserved:", list_byte_occupied)
             address_by_user = int(address_by_user)
             print("Address to int :",address_by_user)
-
             if address_by_user in list_byte_occupied:
                 print("Address is Reserved")
                 self.btn_save.setEnabled(False)
-                tag_name = self.tag_obj.get_tag_name_by_address(address_by_user)
+                tag_name = self.tag_obj.get_tag_name_by_address(id_plc,address_by_user)
                 print("name of tag :: ", tag_name)
                 self.msg_to_user.setStyleSheet('color: red')
                 print("passed color")
@@ -189,11 +193,24 @@ class WindowNewTag(QWidget):
                 self.msg_to_user.setText("This Address is free ")
                 self.msg_to_user.setStyleSheet('color: green')
                 #self.msg_to_user.setFont(QFont('Arial', 13))
-
         else:
             print("Empty input text ")
             self.btn_save.setEnabled(True)
             self.msg_to_user.setText("No input address ")
+
+    def control_name_tag(self):
+        name_tag = self.txt_lin_name_tag.text()
+        id_plc = int(self.cmb_plcs.currentText())
+        list_names = self.tag_obj.list_names_of_tags_by_id_plc(id_plc)
+
+        if name_tag in list_names:
+            self.msg_to_user.setText("This tag name is available")
+            self.msg_to_user.setStyleSheet('color:red')
+            self.btn_save.setEnabled(False)
+        else:
+            self.msg_to_user.setText("")
+            self.btn_save.setEnabled(True)
+
 
 
 app = QApplication(sys.argv)

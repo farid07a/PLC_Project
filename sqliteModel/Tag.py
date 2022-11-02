@@ -191,7 +191,7 @@ class tag:
             tag_obj.create_object(row[0], row[1], row[2], row[3], row[4], row[5])
             list_obj_tags.append(tag_obj)
         return list_obj_tags
-
+    # invalid
     # get list names of tags in database
     # return list_names = ['tag1', 'tag2',...,'tag3']
     def list_names_of_tags(self):
@@ -203,7 +203,7 @@ class tag:
 
     # get list names of tags in database with id_plc
     # return list_names = ['tag1', 'tag2',...,'tag3']
-    def list_names_of_tags(self,id_plc):
+    def list_names_of_tags_by_id_plc(self,id_plc):
         list_names = []
         list_objc_tags = self.list_of_tags_by_id_plc(id_plc)
         for tag_name in list_objc_tags:
@@ -284,6 +284,7 @@ class tag:
                 self.connection_sqlite.disconnect()
         return list_res
 
+    # valid function
     # get join data by join query instead old query  with id_op
     # return list of tuple = (ID_Input,Name,Data_Type,Address_start_bit,Value_Tag,Time_Input,ID_PLC)
     # arg : id_id_op  id_operation for tags related
@@ -318,18 +319,18 @@ class tag:
                 data_type = row[2]
                 print("datatype", data_type)
 
-
+                print(row[4])
 
                 #get_int(row[4], 0)
                 value = 0
                 if data_type == "int":
-                    # value = get_int(row[4], 0)
-                    print(row[4])
+                    #value = get_int(row[4], 0)
+                    # print(row[4])
                     value = int.from_bytes(row[4], 'big')
                 elif data_type == "real":
                     # value = snap7.util.get_real(row[4], 0)
-                    [x] = struct.unpack('f', row[4])
-                    value = x
+                    # [x] = struct.unpack('f', row[4])
+                    # value = x
                     value = snap7.util.get_real(row[4], 0)
                 elif data_type == "bool":
                     ad_bit = row[3]
@@ -347,6 +348,7 @@ class tag:
                 self.connection_sqlite.disconnect()
         return list_res
 
+    # invalid function
     # get join data by join query instead old query  with id_op
     #  result by dictionary = [ dict[ID_Input:"value"],dict[Name:"value"],dict[Data_Type:"value"] ]
     # return list of tuple = (id_op, name_tag, data_type, ad_bit, value, row["Time_Input"], row["ID_PLC"])
@@ -473,7 +475,7 @@ class tag:
                 break
 
         if address_tag_db != -1:
-            query = "SELECT Name FROM tag WHERE Address_start_byte = ?  and ID_PLC=?"
+            query = "SELECT Name FROM tag WHERE Address_start_byte = ? AND ID_PLC = ?"
             try:
                 self.connection_sqlite.connecting()
                 cursor = self.connection_sqlite.get_connection().cursor()
@@ -496,9 +498,8 @@ class tag:
 # list_of_tags_by_id_plc(id_plc)
 # get_tag_name_by_address(id_plc,address_byte)
 # get_occupied_memory_cases_by_id_plc(id_plc)
-
-# tag_insta = tag()
-# tag_insta.get_all_tags_and_time_optimized(3)
+tag_insta = tag()
+tag_insta.get_all_tags_and_time_optimized(1)
 # print(tag_insta.list_of_tags_by_id_plc(1))
 # print("---------------")
 # tag_insta.get_data_tags_in_database_by_id_plc(1)

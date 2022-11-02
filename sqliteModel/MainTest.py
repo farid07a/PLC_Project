@@ -35,11 +35,11 @@ print("Size Of data Block :",SIZE)
 
 db=bytearray(20)
 
-set_int(db,0,10)
-set_real(db,2,20.5)
-set_bool(db,6,0,1)
+set_int(db,0,40)
+set_real(db,2,40.5)
+set_bool(db,6,0,0)
 set_bool(db,6,1,0)
-set_real(db,7,30.50)
+set_real(db,7,40.40)
 
 
 print("db array :", db)

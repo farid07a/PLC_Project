@@ -38,10 +38,10 @@ class SplitDataPackage:
 
 
 
-list = [1,2]
-split_data_tag = SplitDataPackage()
-split_data_tag.create(1,1,bytearray(list))
-split_data_tag.insert_split_data_package_database()
+# list = [1,2]
+# split_data_tag = SplitDataPackage()
+# split_data_tag.create(1,1,bytearray(list))
+# split_data_tag.insert_split_data_package_database()
 
 #
 # # iterable as source

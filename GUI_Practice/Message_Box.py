@@ -10,6 +10,8 @@ print("yes",re)
 
 print(QMessageBox.question(form,"confirmation","confirmation text",QMessageBox.Yes|QMessageBox.No, QMessageBox.Yes))
 
+inf= QMessageBox.information(form,"test")
+
 if re== QMessageBox.Yes:
     print(" yes ")
 else:

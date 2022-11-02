@@ -57,13 +57,17 @@ class InputData:
         return last_id
 
     # list tag_input
-    def get_list_operation_tag_input_table(self):   # get list all
-        query = "SELECT DISTINCT ID_Input FROM tag_input"
+    def get_list_operation_tag_input_table(self,id_plc):   # get list all
+        # query = "SELECT DISTINCT ID_Input FROM tag_input"
+        query = "SELECT DISTINCT i.ID_Input FROM plc_controller p JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+              " JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+              " JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+              " WHERE p.ID_PLC = ?"
         list_id = []
         try:
             self.connection_sqlite.connecting()
             cursor = self.connection_sqlite.get_connection().cursor()
-            cursor.execute(query)
+            cursor.execute(query, (id_plc,))
             list_id = cursor.fetchall()
             cursor.close()
         except sqlite3.Error as error:
@@ -74,16 +78,46 @@ class InputData:
         return list_id
 
     # not testing with sqlite
-    def get_list_operation_input_between_two_dates(self, dt1, dt2):
+    def get_list_operation_input_between_two_dates(self, dt1, dt2, id_plc):
         query = "SELECT DISTINCT ID_Input FROM input_table  " \
                 "WHERE  input_table.Time_Input >= ?  AND input_table.Time_Input <= ? "
+
+        query = "SELECT DISTINCT i.ID_Input FROM plc_controller p JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+                " JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+                " JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+                " WHERE " \
+                " (i.Time_Input >= ?  AND i.Time_Input <= ? ) " \
+                " AND p.ID_PLC = ? "
+
+        query = "SELECT DISTINCT i.ID_Input FROM plc_controller p " \
+                "JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+                "JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+                "JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+                "WHERE (DATE(i.Time_Input) " \
+                "BETWEEN  " \
+                "date ('"+ "2022-11-02 13:45:35" + "') AND date ('" + "2022-11-02 14:45:35" + "')) " \
+                " AND p.ID_PLC = 1"
+
+        query = "SELECT DISTINCT i.ID_Input FROM plc_controller p " \
+                "JOIN tag t ON p.ID_PLC= t.ID_PLC " \
+                "JOIN tag_input ti ON ti.ID_Tag = t.ID_Tag " \
+                "JOIN input_table i ON i.ID_Input=ti.ID_Input " \
+                "WHERE (datetime(i.Time_Input) " \
+                "BETWEEN  " \
+                "datetime ('" + dt1 + "') AND datetime ('" + dt2 + "')) " \
+                "AND p.ID_PLC = ?"
 
         list_id = []
         try:
             self.connection_sqlite.connecting()
             cursor = self.connection_sqlite.get_connection().cursor()
-            cursor.execute(query, (dt1, dt2))
+            cursor.execute(query, (id_plc,))
+           # cursor.execute(query)
             list_id = cursor.fetchall()
+
+            for row in list_id:
+                print(row)
+
             cursor.close()
         except sqlite3.Error as error:
             print(error)
@@ -92,6 +126,12 @@ class InputData:
                 self.connection_sqlite.disconnect()
         return list_id
 
+
+
+li = InputData().get_list_operation_input_between_two_dates("2022-11-02 10:45:35", "2022-11-02 14:45:35", 1)
+
+print(li)
+        # "2022-10-20 12:31:35", "2022-10-24 13:05:22"
 #
 # db = bytearray(20)
 # # #

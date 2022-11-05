@@ -1,9 +1,7 @@
 import datetime
 import sqlite3
 
-from snap7.util import set_int, set_real, set_bool
-
-from Model.ConnectionSqliteDB import ConnectionSqliteDB
+from Model_Control_.ConnectionSqliteDB import ConnectionSqliteDB
 
 
 class InputData:
@@ -125,6 +123,8 @@ class InputData:
             if self.connection_sqlite.get_connection():
                 self.connection_sqlite.disconnect()
         return list_id
+
+
 
 
 

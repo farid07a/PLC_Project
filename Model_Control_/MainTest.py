@@ -2,10 +2,10 @@ from time import sleep
 import snap7
 from snap7.util import *
 from snap7 import client
-from sqliteModel.Tag import tag
-from sqliteModel.PLC import plcMachine
-from sqliteModel.ReadData import InputData
-from sqliteModel.SplitDataPackage import SplitDataPackage
+from Model_Control_.Tag import tag
+from Model_Control_.PLC import plcMachine
+from Model_Control_.ReadData import InputData
+from Model_Control_.SplitDataPackage import SplitDataPackage
 
 IP = "192.168.0.1"
 RACK = 0
@@ -33,7 +33,7 @@ print("Size Of data Block :",SIZE)
 # db = plc.db_read(DB_NUMBER, START_ADDRESS, SIZE) # REPLACE by test db byteArray
 
 
-db=bytearray(20)
+db = bytearray(20)
 
 set_int(db,0,40)
 set_real(db,2,40.5)
@@ -47,7 +47,6 @@ print("db array :", db)
 read_data_obj.Data_Input = db  # set dataBloc to DataInput to save with operation
 read_data_obj.insert_input_data() # save The operation read of data with primary key
 list_tags = tag_obj.list_of_tags_by_id_plc(1)      # get list of tags to get id
-
 
 for tag_i in list_tags:
 

@@ -16,8 +16,8 @@ import sys
 from mysql.connector import Time
 from snap7.util import get_int
 
-from sqliteModel.ReadData import InputData
-from sqliteModel.Tag import tag
+from Model_Control_.ReadData import InputData
+from Model_Control_.Tag import tag
 
 class history(QWidget):
     tag_obj = None
@@ -193,6 +193,7 @@ class history(QWidget):
                     value = int.from_bytes(tupele_id_op[4], 'big')
                 elif data_type == "real":
                     value = snap7.util.get_real(tupele_id_op[4], 0)
+                    value = round(value, 1)
                 elif data_type == "bool":
                     ad_bit = tupele_id_op[3]
                     value = snap7.util.get_bool(tupele_id_op[4], 0, ad_bit)
@@ -202,7 +203,7 @@ class history(QWidget):
                 plc_id = str(tupele_id_op[6])
                 print()
 
-                self.tab_history.setItem(i, j, QTableWidgetItem(str(round(value, 1))))
+                self.tab_history.setItem(i, j, QTableWidgetItem(str(value)))
 
             self.tab_history.setItem(i, len(list_by_id_operation), QTableWidgetItem(time_read))
             self.tab_history.setItem(i, len(list_by_id_operation) + 1, QTableWidgetItem(plc_id))

@@ -2,9 +2,9 @@ from snap7 import client
 import sqlite3
 
 
-from Model.ConnectionSqliteDB import ConnectionSqliteDB
+from Model_Control_.ConnectionSqliteDB import ConnectionSqliteDB
 
-from sqliteModel.Tag import tag
+from Model_Control_.Tag import tag
 
 from Model.data_type import DataType
 

@@ -4,8 +4,8 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, QLabel, \
     QLineEdit, QComboBox, QTableWidgetItem, QMessageBox
 
-from sqliteModel.PLC import plcMachine
-from sqliteModel.Tag import tag
+from Model_Control_.PLC import plcMachine
+from Model_Control_.Tag import tag
 
 
 class WindowNewTag(QWidget):

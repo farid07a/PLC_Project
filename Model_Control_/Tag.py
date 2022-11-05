@@ -1,14 +1,10 @@
-import struct
-
 import snap7.util
 
-from snap7.util import get_int, get_real
+from snap7.util import get_int
 
-from Model.ConnectionSqliteDB import ConnectionSqliteDB
+
 import sqlite3
-
-from Model.ReadData import InputData
-
+from Model_Control_.ConnectionSqliteDB import ConnectionSqliteDB
 
 class tag:
     ID_Tag = 0

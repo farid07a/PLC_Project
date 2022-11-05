@@ -1,9 +1,6 @@
-import struct
-
 # simple list of integers
-from snap7.util import get_real
 import sqlite3
-from Model.ConnectionSqliteDB import ConnectionSqliteDB
+from Model_Control_.ConnectionSqliteDB import ConnectionSqliteDB
 
 
 class SplitDataPackage:

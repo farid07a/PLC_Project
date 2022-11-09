@@ -43,7 +43,7 @@ class ConnectionSqliteDB:
 
     def connecting(self):
         try:
-            self.connection_db = sqlite3.connect('D:\database_plc.db')
+            self.connection_db = sqlite3.connect('E:\database_plc.db')
             #self.connection_db = sqlite3.connect('database_plc_old.db')
             #self.connection_db = sqlite3.connect('\\Model_Control_\\database_plc.db')
             print("success connecting")

@@ -137,7 +137,7 @@ class Home(QMainWindow):
         sleep(1)
         list_tags = self.tag_obj.list_of_tags_by_id_plc(self.plc_object.getIdPlc())  # get list of tags to get id
         i=0
-        while i<10 :
+        while True :
 
             "===== read Date from Block Date type bool====="
             DB_NUMBER = 1  # The date block number to be read.
@@ -199,6 +199,9 @@ class Home(QMainWindow):
             i += 1
 
             sleep(1)
+            QApplication.processEvents()
+
+
 
     def prepare_table_view_data_reading_from_plc_horizontal_order(self):
         self.tab_history.setRowCount(0)

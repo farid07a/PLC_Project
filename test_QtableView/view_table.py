@@ -3,6 +3,7 @@ from time import sleep
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication
 
 
 class TableModel(QtCore.QAbstractTableModel):
@@ -56,8 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.model = TableModel(data)
             self.table.setModel(self.model)
-
+            sleep(1)
             i += 1
+            QApplication.processEvents()
 
 
 

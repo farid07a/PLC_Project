@@ -1,0 +1,27 @@
+Polymorphism:
+    Method Overriding:
+        we have child class have same methode in parent class
+        parent class animal:
+            makeSound():
+        class cat (Animal):
+            # overriding
+            makeSound():
+                print("Myaw")
+
+        class dog(Animal):
+            # overriding
+            makeSound():
+                print("how")
+
+    Method Overloading
+        # Single Action in different ways
+        # like interface by many implementation
+        # interface is method shared between classes to communicate between this classes
+        # common interface to avoid coupling with classes
+        class math:
+
+            def sum(x,y):
+                return (x+y)
+
+            def sum (x,y,z)
+                return x+y+z

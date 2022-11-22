@@ -4,18 +4,17 @@ from time import sleep
 
 import snap7
 from PyQt5 import QtCore
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QPushButton, QTableWidget, \
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QTableWidget, \
     QTableWidgetItem, QLabel, QLineEdit, QMenuBar, QMenu, QHeaderView, QMessageBox
 from snap7 import client
 from snap7.util import get_int, set_int, set_real, set_bool, get_real
 
 from Model_Control_.Tag_Window import WindowNewTag
 from Model_Control_.form_history import history
-from Model_Control_.PLC import plcMachine
-from Model_Control_.ReadData import InputData
-from Model_Control_.SplitDataPackage import SplitDataPackage
-from Model_Control_.Tag import tag
+from Model.PLC import plcMachine
+from Model.ReadData import InputData
+from Model.SplitDataPackage import SplitDataPackage
+from Model.Tag import tag
 
 
 class Home(QMainWindow):
@@ -38,56 +37,45 @@ class Home(QMainWindow):
         # qtRectangle.moveCenter(centerPoint)
         # self.move(qtRectangle.topLeft())
         self.menu_bar = QMenuBar(self)
-
         self.new_menu = QMenu('new')
         self.connect_menu = QMenu('connect')
         self.menu_bar.addMenu(self.new_menu)
         self.menu_bar.addMenu(self.connect_menu)
+        self.initWidgets()
 
+        self.plc_object = plcMachine(0, "", 1, 0)
+        self.load_plcs()
+
+        self.tag_obj = tag()
+
+        # self.display_history_with_update_query()
+
+    def initWidgets(self):
+        self.create_side_bar_menu()
+        self.create_design_of_form_and_table_plc()
+        self.create_and_design_table_data_tags()
+        self.create_Buttons_and_actions_read_data_plc()
+
+    def create_side_bar_menu(self):
+        # menu side bar
         btn_plc = QPushButton('Connect PLC', self)
         btn_plc.move(10, 50)
-
-        btn_history = QPushButton('Show history',self)
-        btn_history.move(10,100)
+        btn_history = QPushButton('Show history', self)
+        btn_history.move(10, 100)
         btn_history.clicked.connect(self.show_history_window)
-
         btn_tag = QPushButton('Add tag', self)
         btn_tag.move(10, 150)
         btn_tag.clicked.connect(self.show_tag_window)
 
+    def create_design_of_form_and_table_plc(self):
+        # table plcs
         self.tab_plcs = QTableWidget(self)
-        self.tab_plcs.resize(400,250)
-        self.tab_plcs.move(140,50)
-        #self.tab_plcs.setRowCount(3)
-
+        self.tab_plcs.resize(400, 250)
+        self.tab_plcs.move(140, 50)
         self.tab_plcs.setColumnCount(4)
-        self.tab_plcs.setHorizontalHeaderLabels(["N°","IP","RACK","SLOT"])
-
+        self.tab_plcs.setHorizontalHeaderLabels(["N°", "IP", "RACK", "SLOT"])
         self.tab_plcs.clicked.connect(self.get_plc_info_from_table)
-
-
-        self.btn_reading_data = QPushButton('Start Reading',self)
-        self.btn_reading_data.move(160, 330)
-        self.btn_reading_data.clicked.connect(self.start_reading_data_plc)
-        # self.btn_reading_data.clicked.connect(self.start_reading_data)
-
-        self.btn_reading_data_manualy = QPushButton('test Reading Manualy', self)
-        self.btn_reading_data_manualy.move(160, 370)
-        self.btn_reading_data_manualy.clicked.connect(self.start_reading_data_without_while)
-        # self.btn_reading_data.clicked.connect(self.start_reading_data)
-
-        self.stop_reading_data = QPushButton('Stop reading', self)
-        self.stop_reading_data.move(300, 330)
-        self.stop_reading_data.clicked.connect(self.stop_reading)
-
-        self.test_fill_table = QPushButton('testfill', self)
-        self.test_fill_table.move(450, 330)
-        self.test_fill_table.clicked.connect(self.table_test_fill)
-
-        self.view_data_tags = QPushButton('View Data tags', self)
-        self.view_data_tags.move(300, 370)
-        self.view_data_tags.clicked.connect(self.prepare_table_tags_data)
-
+        # form registration
         lab_ip = QLabel("IP Address :", self)
         lab_ip.setGeometry(10, 450, 100, 35)
 
@@ -119,16 +107,35 @@ class Home(QMainWindow):
 
         self.btn_sv_plc.clicked.connect(self.save_plc)
 
-        self.plc_object = plcMachine(0, "", 0, 1)
-        self.load_plcs()
-        # add New Table about reading data in form PLC
-
+    def create_and_design_table_data_tags(self):
         self.tab_history = QTableWidget(self)
         self.tab_history.resize(700, 500)
         self.tab_history.move(550, 50)
-        self.tag_obj = tag()
 
-        # self.display_history_with_update_query()
+    def create_Buttons_and_actions_read_data_plc(self):
+        self.btn_reading_data = QPushButton('Start Reading', self)
+        self.btn_reading_data.move(160, 330)
+        self.btn_reading_data.clicked.connect(self.start_reading_data_plc)
+        # self.btn_reading_data.clicked.connect(self.start_reading_data)
+
+        self.btn_reading_data_manualy = QPushButton('test Reading Manualy', self)
+        self.btn_reading_data_manualy.move(160, 370)
+        self.btn_reading_data_manualy.clicked.connect(self.start_reading_data_without_while)
+        # self.btn_reading_data.clicked.connect(self.start_reading_data)
+
+        self.stop_reading_data = QPushButton('Stop reading', self)
+        self.stop_reading_data.move(300, 330)
+        self.stop_reading_data.clicked.connect(self.stop_reading)
+
+        self.test_fill_table = QPushButton('testfill', self)
+        self.test_fill_table.move(450, 330)
+        self.test_fill_table.clicked.connect(self.table_test_fill)
+
+        self.view_data_tags = QPushButton('View_Control Data tags', self)
+        self.view_data_tags.move(300, 370)
+        self.view_data_tags.clicked.connect(self.prepare_table_tags_data)
+
+
 
     def table_test_fill(self):
         self.tab_history.setRowCount(0)
@@ -605,14 +612,21 @@ class Home(QMainWindow):
 
     def start_reading_data_plc(self):
 
-        if (self.plc_object.getIdPlc()>0):
+        if self.plc_object.getIdPlc() > 0:
             try:
-                self.plc_physic.connect(self.plc_object.getIP(), self.plc_object.getRACK(), self.plc_object.getSlot())
+                #self.plc_physic.connect(self.plc_object.getIP(), self.plc_object.getRACK(), self.plc_object.getSlot())
+                self.plc_physic.connect("192.168.0.10", 0, 1)
             except:
                 print("pass connection physic plc ")
             list_tags = self.tag_obj.list_of_tags_by_id_plc(self.plc_object.getIdPlc())
             self.prepare_table_view_data_reading_from_plc_horizontal_order()
-            while self.plc_physic.get_connected():
+            #while self.plc_physic.get_connected():
+
+            while True:
+
+                if not self.plc_physic.get_connected():
+                    print("No connection to plc")
+                    break
 
                 "===== read Date from Block Date type bool====="
                 DB_NUMBER = 1  # The date block number to be read.
@@ -623,7 +637,6 @@ class Home(QMainWindow):
                 self.read_data_obj.insert_input_data()  # save The operation read of data with primary key
                 id_read = self.read_data_obj.get_last_operation_read()  # return last id of Operation Read
                 row_line = 0
-
                 for tag_i in list_tags:
                     id_tag = tag_i.get_id_tag()
                     data_type = tag_i.get_data_type()
@@ -634,23 +647,25 @@ class Home(QMainWindow):
                         # part_of_tag = bytearray(2)
                         part_of_tag = db[addres_byte:addres_byte + 2]
                         value = get_int(db, addres_byte)
-
+                        print(value)
                     elif data_type == "real":
                         # part_of_tag = bytearray(4)
                         part_of_tag = db[addres_byte:addres_byte + 4]
                         value = get_real(db, addres_byte)
                         value = round(value, 1)
-
+                        print(value)
                     elif data_type == "bool":
                         # part_of_tag = bytearray(1)
                         addres_bit = tag_i.get_address_start_bit()
                         part_of_tag = db[addres_byte:addres_byte + 1]
                         value = snap7.util.get_bool(db, addres_byte, addres_bit)
+                        print(value)
 
                     self.split_data_tag.create(id_tag, id_read, part_of_tag)  #
                     self.split_data_tag.insert_split_data_package_database()  # insert data in database
                     self.tab_history.setItem(row_line, 4, QTableWidgetItem(str(value))) # correct
                     row_line += 1  # increment in [0- 4]
+
                 sleep(0.5)
         else:
             msg_box = QMessageBox()
@@ -658,7 +673,6 @@ class Home(QMainWindow):
             msg_box.setWindowTitle('Information')
             msg_box.setText("please select one plc")
             msg_box.exec()
-
 
 
     def stop_reading(self):

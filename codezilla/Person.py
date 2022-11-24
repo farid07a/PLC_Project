@@ -7,13 +7,16 @@ class Person:
 
     def display(self):
         return f"name is {self.__name} age :{self.__age} "
+
+    # create constructor with class method
     @classmethod
     def initFromBirthYear(cls,name,birthYear,extra):
-        return cls(name,)
+        return cls(name,date.today().year-birthYear,extra)
+
 
 
 class Man(Person):
-    gender="Man" # class attribute must initialise static variable
+    gender = "Man" # class attribute must initialise static variable
     no_of_man = 0# class attribute must initialise
 
     def __init__(self,name,age,voice):
@@ -25,8 +28,10 @@ class Man(Person):
         string_herit=super().display()
         return string_herit+ f" and my voice is {self.voice} and gender :{Man.gender} or gender by self {self.gender}"
 
-class woman(Person):
-    gender="female"
+
+class Woman(Person):
+
+    gender = "female"
     no_of_woman = 0
 
     def __init__(self,name , age, hair):
@@ -34,25 +39,22 @@ class woman(Person):
         self.hair=hair
 
     def display(self):
-        strin_msg=super().display()
-        return strin_msg+f"My gender is {woman.gender} and hair{self.hair}"
+        string_msg = super().display()
+        return string_msg+f"My gender is {self.gender} and hair{self.hair} "
 
 
-wom=woman("farid",30,"curly")
-print(wom.display())
-
-wom=woman("farid",30,"curly")
-
-print(woman.no_of_woman)
-
-
-
-
-
-man=Man("farid",30,"nice")
-
+man = Man("Farid_constructor", 30, "hard")
+print(man.display())
+man = Man.initFromBirthYear("name_ClassMethod", 1989, "black")
 print(man.display())
 
-man1=Man("amin",40,"hard")
-print(Man.no_of_man) # like static variable
+wom = Woman("women", 33, "black")
+
+print(wom.display())
+
+wom = Woman.initFromBirthYear("Woman", 1989, "yellow")
+print(wom.display())
+
+print(isinstance(wom,Woman))
+
 

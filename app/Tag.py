@@ -86,6 +86,6 @@ class Tag:
         return list_tag
 
 
-tag_obj=Tag(1,"tag_name","int",13,3,1)
+tag_obj=Tag(1, "tag_name", "int", 13, 3, 1)
 tag_obj.insert_tag_in_database()
 print(tag_obj.get_data_tags_in_database())

@@ -5,8 +5,8 @@ from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, 
     QLineEdit, QComboBox, QTableWidgetItem
 
 
-from Model.PLC import plcMachine
-from Model.Tag import tag
+from Model_old.PLC import plcMachine
+from Model_old.Tag import tag
 
 
 class WindowNewTag(QWidget):

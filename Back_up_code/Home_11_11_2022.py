@@ -12,10 +12,10 @@ from snap7.util import get_int, set_int, set_real, set_bool, get_real
 
 from View_Control.Tag_Window import WindowNewTag
 from View_Control.form_history import history
-from Model.PLC import plcMachine
-from Model.ReadData import InputData
-from Model.SplitDataPackage import SplitDataPackage
-from Model.Tag import tag
+from Model_old.PLC import plcMachine
+from Model_old.ReadData import InputData
+from Model_old.SplitDataPackage import SplitDataPackage
+from Model_old.Tag import tag
 from View_Control.form_view_scroll_data_table import viewDataHistory
 
 

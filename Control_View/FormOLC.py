@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Read "))
         self.label_7.setText(_translate("MainWindow", "Start"))
         self.groupBox_2.setTitle(_translate("MainWindow", "PLC Detaills"))
-        self.label_4.setText(_translate("MainWindow", "PLC Model:"))
+        self.label_4.setText(_translate("MainWindow", "PLC Model_old:"))
         self.label_5.setText(_translate("MainWindow", "CPU status"))
         self.pushButton_2.setText(_translate("MainWindow", "View Proprites"))
         self.label_6.setText(_translate("MainWindow", "S7 1200"))

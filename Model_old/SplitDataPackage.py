@@ -1,36 +1,44 @@
+import struct
+
 # simple list of integers
-import sqlite3
-from Model.ConnectionSqliteDB_old import ConnectionSqliteDB
+from snap7.util import get_real
+import mysql.connector
+from Model_old.ConnectionMysqlDB import ConnectionMysqlDB
 
 
 class SplitDataPackage:
     ID_Tag = 0
-    ID_Input = 0
+    ID_Input =0
     Value_Tag = bytearray(0)
 
-    connection_sqlite = ConnectionSqliteDB()
+    connection_mysql = ConnectionMysqlDB()
 
-    def create(self, ID_Tag, ID_Input, Value_Tag):
-        self.ID_Tag = ID_Tag
-        self.ID_Input = ID_Input
-        self.Value_Tag = Value_Tag
+    def create(self,ID_Tag,ID_Input,Value_Tag):
+        self.ID_Tag=ID_Tag
+        self.ID_Input=ID_Input
+        self.Value_Tag=Value_Tag
 
     def insert_split_data_package_database(self):
-        query = "INSERT INTO tag_input(ID_Tag,ID_Input,Value_Tag) VALUES (?,?,?)"
+        query = "INSERT INTO tag_input(ID_Tag,ID_Input,Value_Tag) VALUES (%s,%s,%s)"
+        cursor = None
         try:
-            self.connection_sqlite.connecting()
-            cursor = self.connection_sqlite.get_connection().cursor()
-            split_data_tag = (self.ID_Tag, self.ID_Input, self.Value_Tag)
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor()
+            split_data_tag = (self.ID_Tag,self.ID_Input, self.Value_Tag)
             print("Data To insert : ", split_data_tag)
             cursor.execute(query, split_data_tag)
             print("success Insert partition in table tag_input")
-            self.connection_sqlite.get_connection().commit()
-            cursor.close()
-        except sqlite3.Error as error:
-            print("Error insert_split_data_package_database:", error)
+            self.connection_mysql.get_connection().commit()
+        except mysql.connector.Error as error:
+            print("Error insert_split_data_package_database:",error)
         finally:
-            if self.connection_sqlite.get_connection():
-                self.connection_sqlite.disconnect()
+            if self.connection_mysql.get_connection().is_connected():
+                cursor.close()
+                self.connection_mysql.disconnect()
+
+
+
+
 
 # list = [1,2]
 # split_data_tag = SplitDataPackage()
@@ -65,3 +73,6 @@ class SplitDataPackage:
 # print(by)
 #
 # print(len(by))
+
+
+

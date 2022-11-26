@@ -1,10 +1,11 @@
+import snap7
 from snap7 import client
-import sqlite3
+import mysql.connector
+from snap7.util import get_int
 
-
-from Model_Control_.ConnectionSqliteDB import ConnectionSqliteDB
-
-from Model_Control_.Tag import tag
+from Model_old.ConnectionMysqlDB import ConnectionMysqlDB
+#from data_type import DataType
+from Model_old.Tag import tag
 
 from Model_old.data_type import DataType
 
@@ -22,7 +23,7 @@ class plcMachine:
     Connection_status_plc = False
 
     # var_connection = mysql.connector.connect()
-    connection_sqlite = ConnectionSqliteDB()
+    connection_mysql = ConnectionMysqlDB()
 
     # Constructor
     def __init__(self, IdPlc, IP, RACK, SLOT):
@@ -80,38 +81,39 @@ class plcMachine:
             self.setSolt(int(input("Input your Slot : ")))
 
     def insert_new_plc(self):  # Tested Pass
-        query = "INSERT INTO plc_controller (IP_Address,RACK,SLOT) values (?,?,?)"
+        query = "INSERT INTO plc_controller (IP_Address,RACK,SLOT) values (%s,%s,%s)"
         cursor = None
         try:
-            self.connection_sqlite.connecting()
-            cursor = self.connection_sqlite.get_connection().cursor()
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor()
             tuple_proprites = ( self.IP, self.RACK, self.SLOT)
             cursor.execute(query, tuple_proprites)
-            self.connection_sqlite.get_connection().commit()
-        except sqlite3.Error as error:
+            self.connection_mysql.get_connection().commit()
+        except mysql.connector.Error as error:
             print("Failed to insert into MySQL table {}".format(error))
         finally:
-            if self.connection_sqlite.get_connection():
+            if self.connection_mysql.get_connection().is_connected():
                 cursor.close()
-                self.connection_sqlite.get_connection().close()
+                self.connection_mysql.get_connection().close()
                 print("MySQL connection is closed")
 
     def get_list_plc(self):  # Tested is passed
         query = "select * from plc_controller"
         list_plc = []
         try:
-            self.connection_sqlite.connecting()
-            cursor = self.connection_sqlite.get_connection().cursor()
+            self.connection_mysql.connecting()
+            cursor = self.connection_mysql.get_connection().cursor()
             cursor.execute(query)
+            print(cursor.column_names.__len__())
             list_plc = cursor.fetchall()
             for id in list_plc:
                 print(id[0])
-            cursor.close()
-        except sqlite3.Error as error :
+
+            cursor.close
+        except mysql.connector.Error as error :
             print(error)
         finally:
-            if self.connection_sqlite.get_connection():
-                self.connection_sqlite.get_connection().close()
+            self.connection_mysql.get_connection().close()
 
         return list_plc
 
@@ -126,7 +128,7 @@ class plcMachine:
     def add_new_colum_in_plc_table(self, name, value): # depracate
         datatype_obj = DataType()
         try:
-            connection = sqlite3.connect(user='root', passwd='', host='localhost', database='myf')
+            connection = mysql.connector.connect(user='root', passwd='', host='localhost', database='myf')
         except:
             print("Error: Can't connect to database")
             return

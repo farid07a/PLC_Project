@@ -1,13 +1,10 @@
-import snap7
 from snap7 import client
-import mysql.connector
-from snap7.util import get_int
+import sqlite3
 
-from Model.ConnectionMysqlDB import ConnectionMysqlDB
-#from data_type import DataType
-from Model.Tag import tag
 
-from Model.data_type import DataType
+from Model.ConnectionSqliteDB import ConnectionSqliteDB
+
+from Model.Tag import Tag
 
 
 class plcMachine:
@@ -23,7 +20,7 @@ class plcMachine:
     Connection_status_plc = False
 
     # var_connection = mysql.connector.connect()
-    connection_mysql = ConnectionMysqlDB()
+    connection_sqlite = ConnectionSqliteDB()
 
     # Constructor
     def __init__(self, IdPlc, IP, RACK, SLOT):
@@ -81,84 +78,115 @@ class plcMachine:
             self.setSolt(int(input("Input your Slot : ")))
 
     def insert_new_plc(self):  # Tested Pass
-        query = "INSERT INTO plc_controller (IP_Address,RACK,SLOT) values (%s,%s,%s)"
-        cursor = None
+        query = "INSERT INTO plc_controller (IP_Address,RACK,SLOT) values (?,?,?)"
         try:
-            self.connection_mysql.connecting()
-            cursor = self.connection_mysql.get_connection().cursor()
+            self.connection_sqlite.connecting()
+            cursor = self.connection_sqlite.get_connection().cursor()
             tuple_proprites = ( self.IP, self.RACK, self.SLOT)
             cursor.execute(query, tuple_proprites)
-            self.connection_mysql.get_connection().commit()
-        except mysql.connector.Error as error:
+            self.connection_sqlite.get_connection().commit()
+            cursor.close()
+        except sqlite3.Error as error:
             print("Failed to insert into MySQL table {}".format(error))
         finally:
-            if self.connection_mysql.get_connection().is_connected():
-                cursor.close()
-                self.connection_mysql.get_connection().close()
+            if self.connection_sqlite.get_connection():
+                self.connection_sqlite.get_connection().close()
                 print("MySQL connection is closed")
+
+    def get_id_PLC_from_database(self,ip_address):
+        query = " SELECT ID_PLC FROM plc_controller WHERE IP_Address=?"
+        id_plc = 0
+        try:
+            self.connection_sqlite.connecting()
+            cursor = self.connection_sqlite.get_connection().cursor()
+            cursor.execute(query, (ip_address,))
+            list_id_plc = cursor.fetchall()
+            for id in list_id_plc:
+                id_plc = id[0]
+            cursor.close()
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            if self.connection_sqlite.get_connection():
+                self.connection_sqlite.get_connection().close()
+        return id_plc
+
+    def update_plc_info(self,id_plc):
+        query = "UPDATE plc_controller SET IP_Address= ?, RACK=?, SLOT= ? WHERE ID_PLC = ? "
+        try:
+            self.connection_sqlite.connecting()
+            cursor = self.connection_sqlite.get_connection().cursor()
+            cursor.execute(query, (self.getIP(),self.getRACK(),self.getSlot() , id_plc) )
+            print(cursor.rowcount)
+            self.connection_sqlite.get_connection().commit()
+            cursor.close()
+        except sqlite3.Error as error:
+            print(error)
+        finally:
+            if self.connection_sqlite.get_connection():
+                self.connection_sqlite.get_connection().close()
 
     def get_list_plc(self):  # Tested is passed
         query = "select * from plc_controller"
         list_plc = []
         try:
-            self.connection_mysql.connecting()
-            cursor = self.connection_mysql.get_connection().cursor()
+            self.connection_sqlite.connecting()
+            cursor = self.connection_sqlite.get_connection().cursor()
             cursor.execute(query)
-            print(cursor.column_names.__len__())
             list_plc = cursor.fetchall()
             for id in list_plc:
                 print(id[0])
-
-            cursor.close
-        except mysql.connector.Error as error :
+            cursor.close()
+        except sqlite3.Error as error :
             print(error)
         finally:
-            self.connection_mysql.get_connection().close()
+            if self.connection_sqlite.get_connection():
+                self.connection_sqlite.get_connection().close()
 
         return list_plc
 
     def display_plcs_in_table(self):  # tested pass
         list_plc = self.get_list_plc()
         size_row = list_plc[0].__len__()
-        print("|id\t |Model\t |IP \t \t |Rack\t |SLOT\t|")
+        print("|id\t |test\t |IP \t \t |Rack\t |SLOT\t|")
         for plc in list_plc:
             print("|", plc[0], "\t |", plc[1], "\t |", plc[2], "\t \t |", plc[3], "\t |" "\t|")
 
     # TODO: use for insert new Colum later
-    def add_new_colum_in_plc_table(self, name, value): # depracate
-        datatype_obj = DataType()
-        try:
-            connection = mysql.connector.connect(user='root', passwd='', host='localhost', database='myf')
-        except:
-            print("Error: Can't connect to database")
-            return
-        dt_type = ''
-        if type(value) == int:
-            dt_type = datatype_obj.INT
-        elif type(value) == float:
-            dt_type = datatype_obj.FLOAT
-        elif type(value) == str:
-            dt_type = datatype_obj.VARCHAR
-        elif type(value) == bool:
-            dt_type = datatype_obj.BOOL
-        elif type(value) == bytearray:
-            dt_type = datatype_obj.BINARY
-        else:
-            print("Your value is not availble in my data_type class")
-            return
-
-        cursor = connection.cursor()
-        sql = 'ALTER TABLE plc ADD COLUMN ' + name + ' ' + dt_type
-        try:
-            cursor.execute(sql)
-            connection.commit()
-        except:
-            print("Error: unable to delete a record")
-            connection.rollback()
-        print(cursor.rowcount, 'record(s) deleted')
-        cursor.close()
-        connection.close()
-
+    # def add_new_colum_in_plc_table(self, name, value): # depracate
+    #     datatype_obj = DataType()
+    #     try:
+    #         connection = sqlite3.connect(user='root', passwd='', host='localhost', database='myf')
+    #     except:
+    #         print("Error: Can't connect to database")
+    #         return
+    #     dt_type = ''
+    #     if type(value) == int:
+    #         dt_type = datatype_obj.INT
+    #     elif type(value) == float:
+    #         dt_type = datatype_obj.FLOAT
+    #     elif type(value) == str:
+    #         dt_type = datatype_obj.VARCHAR
+    #     elif type(value) == bool:
+    #         dt_type = datatype_obj.BOOL
+    #     elif type(value) == bytearray:
+    #         dt_type = datatype_obj.BINARY
+    #     else:
+    #         print("Your value is not availble in my data_type class")
+    #         return
+    #
+    #     cursor = connection.cursor()
+    #     sql = 'ALTER TABLE plc ADD COLUMN ' + name + ' ' + dt_type
+    #     try:
+    #         cursor.execute(sql)
+    #         connection.commit()
+    #     except:
+    #         print("Error: unable to delete a record")
+    #         connection.rollback()
+    #     print(cursor.rowcount, 'record(s) deleted')
+    #     cursor.close()
+    #     connection.close()
+    #
 
     def menu(self):
         flag = True
@@ -194,10 +222,8 @@ class plcMachine:
                 flag = False
 
 
-
-
 # obj = plcMachine("S7 1200", "172.16.5.100", 0, 1)
-# obj.menu()
+# print(obj.get_id_PLC_from_database("192.168.0.10"))
 
 
 # table Local

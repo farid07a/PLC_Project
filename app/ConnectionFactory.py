@@ -2,7 +2,6 @@ class ConnectionFactory(object):
     def __init__(self, acceptable_types):
         self.__db = None
 
-
     """This interface defines an object that is able to make database connections.
     This allows database connections to be defined inside application contexts, and
     fed to DAO and DatabaseTemplates."""

@@ -2,10 +2,10 @@ from time import sleep
 import snap7
 from snap7.util import *
 from snap7 import client
-from Model.Tag import tag
-from Model.PLC import plcMachine
-from Model.ReadData import InputData
-from Model.SplitDataPackage import SplitDataPackage
+from Model_old.Tag import tag
+from Model_old.PLC import plcMachine
+from Model_old.ReadData import InputData
+from Model_old.SplitDataPackage import SplitDataPackage
 
 IP = "192.168.0.1"
 RACK = 0

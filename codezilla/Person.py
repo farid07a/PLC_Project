@@ -42,7 +42,7 @@ class Woman(Person):
         string_msg = super().display()
         return string_msg+f"My gender is {self.gender} and hair{self.hair} "
 
-
+Man.initFromBirthYear()
 man = Man("Farid_constructor", 30, "hard")
 print(man.display())
 man = Man.initFromBirthYear("name_ClassMethod", 1989, "black")

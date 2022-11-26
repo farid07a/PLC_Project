@@ -1,5 +1,5 @@
 import mysql.connector
-from Model.ConnectionMysqlDB import ConnectionMysqlDB
+from Model_old.ConnectionMysqlDB import ConnectionMysqlDB
 
 class DataBlock:
 

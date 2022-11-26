@@ -16,8 +16,8 @@ import sys
 from mysql.connector import Time
 from snap7.util import get_int
 
-from Model.ReadData import InputData
-from Model.Tag import tag
+from Model_old.ReadData import InputData
+from Model_old.Tag import tag
 
 class DataHistory(QWidget):
     tag_obj = None
